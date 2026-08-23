@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example Card</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        .bi {
+            width: 1em;
+            height: 1em;
+            vertical-align: -.125em;
+            fill: currentcolor;
+        }
+
+        .alert .bi {
+            flex-shrink: 0;
+            margin-right: var(--wp--preset--spacing--xs, 0.5rem);
+        }
+
+        .pre-output-style {
+            flex: 1;
+            width: 100%;
+            padding: 1rem;
+            font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: #0F172A;
+            background: #F8FAFC;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+        }
+
+        .scroll-area {
+            height: 100%;
+            max-height: 600px;
+            overflow: none;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- // bootstrap custom icons  -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" style="display: none;">
+        <symbol id="check-circle-fill" viewBox="0 0 16 16">
+            <path
+                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+        </symbol>
+        <symbol id="info-fill" viewBox="0 0 16 16">
+            <path
+                d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+        </symbol>
+        <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
+            <path
+                d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+        </symbol>
+
+    </svg>
+    <div class="container-fluid">
+        <div
+            class="d-flex flex-column flex-md-row justify-content-evenly align-items-start align-items-md-stretch gap-5">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        card                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="width-25-desktop card">
+  <img src="https://university-game.tiltroleplay.com/wp-content/uploads/2026/08/screenshot.png" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">This is a wider card with supporting text below.</p>
+  </div>
+  <div class="card-footer">
+    <small class="text-muted">Last updated 3 mins ago</small>
+  </div>
+</div>                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        Converted Output
+                    </h5>
+                </div>
+                <div class="card-body scroll-area">
+                    <div class="alert alert-success alert-dismissible fade" role="alert" id="styleCopied">
+                        <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:">
+                            <use xlink:href="#check-circle-fill"></use>
+                        </svg>
+                        <div>Gutenberg HTML copied to clipboard</div>
+                    </div>
+
+                    <pre id="outputHtml" class="pre-output-style">&lt;!-- wp:column {&quot;className&quot;:&quot;width-25-desktop card&quot;} --&gt;
+&lt;div class=&quot;wp-block-column width-25-desktop card&quot;&gt;
+&lt;!-- wp:image {&quot;className&quot;:&quot;card-img-top&quot;} --&gt;
+&lt;figure class=&quot;card-img-top wp-block-image&quot;&gt;&lt;img src=&quot;https://university-game.tiltroleplay.com/wp-content/uploads/2026/08/screenshot.png&quot; alt=&quot;...&quot;/&gt;&lt;/figure&gt;
+&lt;!-- /wp:image --&gt;
+&lt;!-- wp:group {&quot;className&quot;:&quot;card-body&quot;} --&gt;
+&lt;div class=&quot;card-body wp-block-group&quot;&gt;
+&lt;!-- wp:heading {&quot;level&quot;:5,&quot;className&quot;:&quot;card-title&quot;} --&gt;
+&lt;h5 class=&quot;card-title wp-block-heading&quot;&gt;Card title&lt;/h5&gt;
+&lt;!-- /wp:heading --&gt;
+&lt;!-- wp:paragraph {&quot;className&quot;:&quot;card-text&quot;} --&gt;
+&lt;p class=&quot;card-text&quot;&gt;This is a wider card with supporting text below.&lt;/p&gt;
+&lt;!-- /wp:paragraph --&gt;&lt;/div&gt;
+&lt;!-- /wp:group --&gt;
+&lt;!-- wp:group {&quot;className&quot;:&quot;card-footer&quot;} --&gt;
+&lt;div class=&quot;card-footer wp-block-group&quot;&gt;
+&lt;!-- wp:paragraph {&quot;className&quot;:&quot;text-muted&quot;,&quot;fontSize&quot;:&quot;small&quot;} --&gt;
+&lt;p class=&quot;text-muted has-small-font-size&quot;&gt;Last updated 3 mins ago&lt;/p&gt;
+&lt;!-- /wp:paragraph --&gt;&lt;/div&gt;
+&lt;!-- /wp:group --&gt;&lt;/div&gt;
+&lt;!-- /wp:column --&gt;</pre>
+
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary" id="copyOutput" data-copy-id="outputHtml" data-alert-id="styleCopied">Copy Output</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        Custom css
+                    </h5>
+                </div>
+                <div class="card-body scroll-area">
+                    <div class="alert alert-success alert-dismissible fade" role="alert" id="contentCopied">
+                        <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:">
+                            <use xlink:href="#check-circle-fill"></use>
+                        </svg>
+                        <div>Styles copied to clipboard</div>
+                    </div>
+
+                    <pre id="outputCss" class="pre-output-style">/* Bootstrap-inspired styles for Gutenberg blocks */
+/* Generated by Bootstrap to Gutenberg Converter */
+
+/* Card - Container with border and shadow */
+.card.wp-block-column,
+.card.wp-block-group {
+    background: var(--wp--preset--color--white, #fff);
+    border: 1px solid var(--wp--preset--color--border, #dee2e6);
+    border-radius: var(--wp--preset--spacing--xs, 0.375rem);
+    overflow: hidden;
+}
+
+/* Card Image Top */
+.card-img-top.wp-block-image {
+    margin: 0;
+}
+.card-img-top.wp-block-image img {
+    width: 100%;
+    border-top-left-radius: var(--wp--preset--spacing--xs, 0.375rem);
+    border-top-right-radius: var(--wp--preset--spacing--xs, 0.375rem);
+}
+
+/* Card Body - Padded content area */
+.card-body.wp-block-group {
+    padding: var(--wp--preset--spacing--md, 1rem);
+}
+
+/* Card Title */
+.card-title.wp-block-heading {
+    margin-bottom: var(--wp--preset--spacing--xs, 0.5rem);
+    font-size: var(--wp--preset--font-size--large, 1.25rem);
+    font-weight: 500;
+}
+
+/* Card Text */
+p.card-text {
+    color: var(--wp--preset--color--text-muted, #6c757d);
+    margin-bottom: var(--wp--preset--spacing--md, 1rem);
+}
+
+/* Card Footer */
+.card-footer.wp-block-group {
+    padding: var(--wp--preset--spacing--xs, 0.5rem) var(--wp--preset--spacing--md, 1rem);
+    background-color: var(--wp--preset--color--surface, rgba(0, 0, 0, 0.03));
+    border-top: 1px solid var(--wp--preset--color--border, #dee2e6);
+}
+
+/* Muted text - uses theme variable */
+.text-muted {
+    color: var(--wp--preset--color--text-muted, #6c757d) !important;
+}</pre>
+
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary" id="copyStyle" data-copy-id="outputCss" data-alert-id="contentCopied">Copy Css</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('click', function (event) {
+
+            const button = event.target.closest('[data-copy-id]');
+
+            if (!button) {
+                return;
+            }
+
+            const targetId = button.dataset.copyId;
+            const target = document.getElementById(targetId);
+            const alertId = button.dataset.alertId;
+            const alertShow = document.getElementById(alertId);
+
+            if (!target) {
+                return;
+            }
+
+            navigator.clipboard.writeText(target.textContent);
+
+            alertShow.classList.add('show');
+
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach((item) => {item.classList.remove('show')} );
+            }, 3000);
+
+        });
+    </script>
+</body>
+
+</html>

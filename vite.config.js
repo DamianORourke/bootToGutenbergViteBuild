@@ -5,6 +5,10 @@ export default defineConfig({
   root: '.',
   base: './',
 
+  // Public directory - contents copied to build root
+  // Includes: css/, examples/ (saved by dev API)
+  publicDir: 'public',
+
   // Development server
   server: {
     port: 3000,
