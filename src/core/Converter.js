@@ -439,6 +439,53 @@ export class BootstrapToGutenbergConverter {
       'tooltip', 'popover', 'toast'
     ]
 
+    // Bootstrap to GUC (Gutenberg Utility Classes) mapping
+    // Source: https://github.com/muax3000/gutenberg-utility-classes
+    // Converts Bootstrap responsive classes to WordPress-native breakpoint classes
+    this.bootstrapToGucMap = {
+      // Visibility: d-none d-md-block pattern
+      // Bootstrap uses min-width breakpoints; GUC uses mobile/tablet/desktop
+      'd-none': 'hide-on-mobile hide-on-tablet hide-on-desktop',
+      'd-sm-none': null,
+      'd-md-none': null,
+      'd-lg-none': null,
+      'd-block': null,
+      'd-sm-block': null,
+      'd-md-block': null,
+      'd-lg-block': null,
+
+      // Stacking: flex-column flex-md-row pattern
+      'flex-column': 'stack-from-mobile',
+      'flex-md-row': null,
+      'flex-lg-row': null,
+    }
+
+    // GUC width value mapping (Bootstrap col-N to GUC percentage)
+    this.colToGucWidth = {
+      '1': '10',
+      '2': '20',
+      '3': '25',
+      '4': '33',
+      '5': '40',
+      '6': '50',
+      '7': '60',
+      '8': '66',
+      '9': '75',
+      '10': '80',
+      '11': '90',
+      '12': '100'
+    }
+
+    // Bootstrap breakpoint to GUC device mapping
+    this.breakpointToDevice = {
+      'xs': 'mobile',
+      'sm': 'mobile',
+      'md': 'tablet',
+      'lg': 'desktop',
+      'xl': 'desktop',
+      'xxl': 'desktop'
+    }
+
     // Bind external methods to this instance
     this._bindMethods()
   }
@@ -942,6 +989,98 @@ export class BootstrapToGutenbergConverter {
    */
   getGeneratedCustomClasses() {
     return this.generatedCustomClasses
+  }
+
+  /**
+   * Convert Bootstrap responsive classes to Gutenberg Utility Classes (GUC)
+   * Returns { gucClasses: [], remainingClasses: [] }
+   */
+  convertToGucClasses(classes) {
+    const gucClasses = []
+    const remainingClasses = []
+
+    // Detect stacking patterns: flex-column + flex-md-row = stack-on-mobile
+    const hasFlexColumn = classes.includes('flex-column')
+    const hasFlexSmRow = classes.includes('flex-sm-row')
+    const hasFlexMdRow = classes.includes('flex-md-row')
+    const hasFlexLgRow = classes.includes('flex-lg-row')
+
+    if (hasFlexColumn && (hasFlexSmRow || hasFlexMdRow)) {
+      gucClasses.push('stack-on-mobile')
+    } else if (hasFlexColumn && hasFlexLgRow) {
+      gucClasses.push('stack-on-mobile')
+      gucClasses.push('stack-on-tablet')
+    } else if (hasFlexColumn && !hasFlexSmRow && !hasFlexMdRow && !hasFlexLgRow) {
+      gucClasses.push('stack-from-mobile')
+    }
+
+    // Detect visibility patterns: d-none d-md-block
+    const hasDNone = classes.includes('d-none')
+    const hasDSmBlock = classes.includes('d-sm-block') || classes.includes('d-sm-flex')
+    const hasDMdBlock = classes.includes('d-md-block') || classes.includes('d-md-flex')
+    const hasDLgBlock = classes.includes('d-lg-block') || classes.includes('d-lg-flex')
+
+    if (hasDNone) {
+      if (hasDSmBlock) {
+        gucClasses.push('hide-on-mobile')
+      } else if (hasDMdBlock) {
+        gucClasses.push('hide-on-mobile')
+      } else if (hasDLgBlock) {
+        gucClasses.push('hide-on-mobile')
+        gucClasses.push('hide-on-tablet')
+      }
+    }
+
+    // Reverse pattern: d-block d-md-none (visible on mobile, hidden on md+)
+    const hasDBlock = classes.includes('d-block') || classes.includes('d-flex')
+    const hasDMdNone = classes.includes('d-md-none')
+    const hasDLgNone = classes.includes('d-lg-none')
+
+    if (hasDBlock && hasDMdNone) {
+      gucClasses.push('show-on-mobile')
+    } else if (hasDBlock && hasDLgNone) {
+      gucClasses.push('hide-on-desktop')
+    }
+
+    // Process remaining classes
+    for (const cls of classes) {
+      // Skip classes we've already converted
+      if (/^flex-(column|row)$/.test(cls)) continue
+      if (/^flex-(sm|md|lg|xl|xxl)-(row|column)$/.test(cls)) continue
+      if (/^d-(none|block|flex)$/.test(cls)) continue
+      if (/^d-(sm|md|lg|xl|xxl)-(none|block|flex)$/.test(cls)) continue
+
+      // Convert responsive column classes to GUC width
+      const colMatch = cls.match(/^col-(sm|md|lg|xl|xxl)?-?(\d+)$/)
+      if (colMatch) {
+        const breakpoint = colMatch[1] || 'xs'
+        const colNum = colMatch[2]
+        const device = this.breakpointToDevice[breakpoint] || 'mobile'
+        const widthPct = this.colToGucWidth[colNum]
+        if (widthPct) {
+          gucClasses.push(`width-${widthPct}-${device}`)
+        }
+        continue
+      }
+
+      // Pass through other classes
+      remainingClasses.push(cls)
+    }
+
+    return { gucClasses, remainingClasses }
+  }
+
+  /**
+   * Build class string with custom classes FIRST, then native WordPress classes
+   * (custom-class-first pattern for CSS specificity)
+   */
+  buildClassString(customClasses, nativeClass) {
+    const customs = Array.isArray(customClasses) ? customClasses : [customClasses]
+    const filtered = customs.filter(c => c && c.trim())
+    if (filtered.length === 0) {
+      return nativeClass
+    }
+    return filtered.join(' ') + ' ' + nativeClass
   }
 }
 

@@ -58,22 +58,22 @@ export const cssLibrary = {
     name: 'Card Group',
     type: 'component',
     css: `/* Card Group - Horizontal card layout */
-.wp-block-columns.card-group {
+.card-group.wp-block-columns {
     gap: 0;
 }
-.wp-block-columns.card-group > .wp-block-column {
+.card-group.wp-block-columns > .wp-block-column {
     border: 1px solid var(--wp--preset--color--border, #dee2e6);
     border-radius: 0;
 }
-.wp-block-columns.card-group > .wp-block-column:first-child {
+.card-group.wp-block-columns > .wp-block-column:first-child {
     border-top-left-radius: var(--wp--preset--spacing--xs, 0.375rem);
     border-bottom-left-radius: var(--wp--preset--spacing--xs, 0.375rem);
 }
-.wp-block-columns.card-group > .wp-block-column:last-child {
+.card-group.wp-block-columns > .wp-block-column:last-child {
     border-top-right-radius: var(--wp--preset--spacing--xs, 0.375rem);
     border-bottom-right-radius: var(--wp--preset--spacing--xs, 0.375rem);
 }
-.wp-block-columns.card-group > .wp-block-column:not(:last-child) {
+.card-group.wp-block-columns > .wp-block-column:not(:last-child) {
     border-right: 0;
 }`
   },
@@ -81,8 +81,8 @@ export const cssLibrary = {
     name: 'Card',
     type: 'component',
     css: `/* Card - Container with border and shadow */
-.wp-block-column.card,
-.wp-block-group.card {
+.card.wp-block-column,
+.card.wp-block-group {
     background: var(--wp--preset--color--white, #fff);
     border: 1px solid var(--wp--preset--color--border, #dee2e6);
     border-radius: var(--wp--preset--spacing--xs, 0.375rem);
@@ -93,7 +93,7 @@ export const cssLibrary = {
     name: 'Card Body',
     type: 'component',
     css: `/* Card Body - Padded content area */
-.wp-block-group.card-body {
+.card-body.wp-block-group {
     padding: var(--wp--preset--spacing--md, 1rem);
 }`
   },
@@ -101,7 +101,7 @@ export const cssLibrary = {
     name: 'Card Title',
     type: 'component',
     css: `/* Card Title */
-.wp-block-heading.card-title {
+.card-title.wp-block-heading {
     margin-bottom: var(--wp--preset--spacing--xs, 0.5rem);
     font-size: var(--wp--preset--font-size--large, 1.25rem);
     font-weight: 500;
@@ -120,10 +120,10 @@ p.card-text {
     name: 'Card Image Top',
     type: 'component',
     css: `/* Card Image Top */
-.wp-block-image.card-img-top {
+.card-img-top.wp-block-image {
     margin: 0;
 }
-.wp-block-image.card-img-top img {
+.card-img-top.wp-block-image img {
     width: 100%;
     border-top-left-radius: var(--wp--preset--spacing--xs, 0.375rem);
     border-top-right-radius: var(--wp--preset--spacing--xs, 0.375rem);
@@ -133,7 +133,7 @@ p.card-text {
     name: 'Card Header',
     type: 'component',
     css: `/* Card Header */
-.wp-block-group.card-header {
+.card-header.wp-block-group {
     padding: var(--wp--preset--spacing--xs, 0.5rem) var(--wp--preset--spacing--md, 1rem);
     background-color: var(--wp--preset--color--surface, rgba(0, 0, 0, 0.03));
     border-bottom: 1px solid var(--wp--preset--color--border, #dee2e6);
@@ -143,7 +143,7 @@ p.card-text {
     name: 'Card Footer',
     type: 'component',
     css: `/* Card Footer */
-.wp-block-group.card-footer {
+.card-footer.wp-block-group {
     padding: var(--wp--preset--spacing--xs, 0.5rem) var(--wp--preset--spacing--md, 1rem);
     background-color: var(--wp--preset--color--surface, rgba(0, 0, 0, 0.03));
     border-top: 1px solid var(--wp--preset--color--border, #dee2e6);
@@ -153,7 +153,7 @@ p.card-text {
     name: 'List Group',
     type: 'component',
     css: `/* List Group */
-.wp-block-list.list-group {
+.list-group.wp-block-list {
     display: flex;
     flex-direction: column;
     padding-left: 0;
@@ -167,7 +167,7 @@ p.card-text {
     name: 'List Group Item',
     type: 'component',
     css: `/* List Group Item */
-.wp-block-list.list-group > li.list-group-item {
+.list-group.wp-block-list > li.list-group-item {
     position: relative;
     display: flex;
     align-items: center;
@@ -177,12 +177,12 @@ p.card-text {
     border: 1px solid var(--wp--preset--color--border, rgba(0, 0, 0, 0.125));
     margin-top: -1px;
 }
-.wp-block-list.list-group > li.list-group-item:first-child {
+.list-group.wp-block-list > li.list-group-item:first-child {
     border-top-left-radius: inherit;
     border-top-right-radius: inherit;
     margin-top: 0;
 }
-.wp-block-list.list-group > li.list-group-item:last-child {
+.list-group.wp-block-list > li.list-group-item:last-child {
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
 }`
@@ -214,9 +214,9 @@ p.card-text {
     name: 'Table Bordered',
     type: 'component',
     css: `/* Table Bordered */
-.wp-block-table.table-bordered table,
-.wp-block-table.table-bordered th,
-.wp-block-table.table-bordered td {
+.table-bordered.wp-block-table table,
+.table-bordered.wp-block-table th,
+.table-bordered.wp-block-table td {
     border: 1px solid var(--wp--preset--color--border, #dee2e6);
 }`
   },
@@ -224,7 +224,7 @@ p.card-text {
     name: 'Table Hover',
     type: 'component',
     css: `/* Table Hover */
-.wp-block-table.table-hover tbody tr:hover {
+.table-hover.wp-block-table tbody tr:hover {
     background-color: var(--wp--preset--color--surface, rgba(0, 0, 0, 0.075));
 }`
   },
@@ -232,8 +232,8 @@ p.card-text {
     name: 'Table Compact',
     type: 'component',
     css: `/* Table Compact */
-.wp-block-table.table-sm th,
-.wp-block-table.table-sm td {
+.table-sm.wp-block-table th,
+.table-sm.wp-block-table td {
     padding: var(--wp--preset--spacing--2xs, 0.25rem);
 }`
   },
@@ -558,41 +558,41 @@ p.badge {
     name: 'Button Group',
     type: 'component',
     css: `/* Button Group - wp-block-buttons */
-.wp-block-buttons.btn-group {
+.btn-group.wp-block-buttons {
     gap: 0;
 }
-.wp-block-buttons.btn-group .wp-block-button .wp-block-button__link {
+.btn-group.wp-block-buttons .wp-block-button .wp-block-button__link {
     border-radius: 0 !important;
 }
-.wp-block-buttons.btn-group .wp-block-button:first-child .wp-block-button__link {
+.btn-group.wp-block-buttons .wp-block-button:first-child .wp-block-button__link {
     border-top-left-radius: 0.375rem !important;
     border-bottom-left-radius: 0.375rem !important;
 }
-.wp-block-buttons.btn-group .wp-block-button:last-child .wp-block-button__link {
+.btn-group.wp-block-buttons .wp-block-button:last-child .wp-block-button__link {
     border-top-right-radius: 0.375rem !important;
     border-bottom-right-radius: 0.375rem !important;
 }
-.wp-block-buttons.btn-group .wp-block-button:not(:last-child) .wp-block-button__link {
+.btn-group.wp-block-buttons .wp-block-button:not(:last-child) .wp-block-button__link {
     border-right: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 /* Button Group - wp-block-group */
-.wp-block-group.btn-group {
+.btn-group.wp-block-group {
     display: flex;
     gap: 0;
 }
-.wp-block-group.btn-group .wp-block-button .wp-block-button__link {
+.btn-group.wp-block-group .wp-block-button .wp-block-button__link {
     border-radius: 0 !important;
 }
-.wp-block-group.btn-group .wp-block-button:first-child .wp-block-button__link {
+.btn-group.wp-block-group .wp-block-button:first-child .wp-block-button__link {
     border-top-left-radius: 0.375rem !important;
     border-bottom-left-radius: 0.375rem !important;
 }
-.wp-block-group.btn-group .wp-block-button:last-child .wp-block-button__link {
+.btn-group.wp-block-group .wp-block-button:last-child .wp-block-button__link {
     border-top-right-radius: 0.375rem !important;
     border-bottom-right-radius: 0.375rem !important;
 }
-.wp-block-group.btn-group .wp-block-button:not(:last-child) .wp-block-button__link {
+.btn-group.wp-block-group .wp-block-button:not(:last-child) .wp-block-button__link {
     border-right: 1px solid rgba(0, 0, 0, 0.15);
 }`
   },
@@ -600,15 +600,15 @@ p.badge {
     name: 'Collapse',
     type: 'component',
     css: `/* Collapse - Bootstrap JS required */
-.wp-block-group.collapse {
+.collapse.wp-block-group {
     display: none;
     border: 1px solid var(--wp--preset--color--border);
     border-radius: 0.375rem;
 }
-.wp-block-group.collapse.show {
+.collapse.show.wp-block-group {
     display: block;
 }
-.wp-block-group.collapsing {
+.collapsing.wp-block-group {
     height: 0;
     overflow: hidden;
     transition: height 0.35s ease;
@@ -618,7 +618,7 @@ p.badge {
     name: 'Dropdown',
     type: 'component',
     css: `/* Dropdown - Bootstrap JS required */
-.wp-block-group.dropdown {
+.dropdown.wp-block-group {
     position: relative;
     display: inline-flex;
 }
@@ -632,7 +632,7 @@ p.badge {
     border-bottom: 0;
     border-left: 0.3em solid transparent;
 }
-.wp-block-list.dropdown-menu {
+.dropdown-menu.wp-block-list {
     position: absolute;
     z-index: 1000;
     display: none;
@@ -647,19 +647,19 @@ p.badge {
     top: 100%;
     left: 0;
 }
-.wp-block-list.dropdown-menu.show {
+.dropdown-menu.show.wp-block-list {
     display: block;
 }
-.wp-block-list.dropdown-menu li {
+.dropdown-menu.wp-block-list li {
     list-style: none;
 }
-.wp-block-list.dropdown-menu a.dropdown-item {
+.dropdown-menu.wp-block-list a.dropdown-item {
     display: block;
     padding: 0.25rem 1rem;
     color: var(--wp--preset--color--dark, #212529);
     text-decoration: none;
 }
-.wp-block-list.dropdown-menu a.dropdown-item:hover {
+.dropdown-menu.wp-block-list a.dropdown-item:hover {
     background-color: var(--wp--preset--color--surface, #f8f9fa);
 }
 .dropdown-divider {

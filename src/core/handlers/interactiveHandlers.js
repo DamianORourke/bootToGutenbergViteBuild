@@ -148,7 +148,7 @@ export function handleCollapse(el) {
   const innerContent = this.processChildren(el)
 
   return this.wrapBlock('wp:group', attrs,
-    '<div class="wp-block-group collapse" id="' + collapseId + '">' + innerContent + '</div>'
+    '<div class="collapse wp-block-group" id="' + collapseId + '">' + innerContent + '</div>'
   )
 }
 
@@ -185,7 +185,7 @@ export function handleDropdown(el) {
   }
 
   return this.wrapBlock('wp:group', groupAttrs,
-    '<div class="wp-block-group dropdown">' + output + '</div>'
+    '<div class="dropdown wp-block-group">' + output + '</div>'
   )
 }
 

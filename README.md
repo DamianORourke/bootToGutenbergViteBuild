@@ -80,20 +80,43 @@ Both files contain theme-native CSS for:
 ```php
 // Frontend styles
 function theme_enqueue_styles() {
-    wp_enqueue_style(
-        'bootstrap-gutenberg',
-        get_template_directory_uri() . '/css/wordpress_theme_styles.css',
-        array(),
-        '1.0.0'
-    );
+    // Theme stylesheet
+	wp_enqueue_style(
+		'your-theme-stylesheet-id',
+		get_stylesheet_uri(),
+		array( 'wp-block-library', 'global-styles', 'material-icons' ),
+		wp_get_theme()->get( 'Version' )
+	);
 }
 add_action('wp_enqueue_scripts', 'theme_enqueue_styles');
 
-// Editor styles
-function theme_editor_styles() {
-    add_editor_style('css/wordpress_editor_styles.css');
+/**
+ * Enqueue Gutenberg Utility Classes for both frontend and editor iframe.
+ * Uses enqueue_block_assets hook which loads styles in:
+ * - Frontend (public pages)
+ * - Block editor iframe (admin editing)
+ * Based on: https://github.com/muax3000/gutenberg-utility-classes
+ * Added support for theme style.css
+ */
+function your_theme_assets_block_assets() {
+	$guc_path = get_template_directory() . '/css/gutenberg-utility-classes.css';
+	wp_enqueue_style(
+		'gutenberg-utility-classes',
+		get_template_directory_uri() . '/css/gutenberg-utility-classes.css',
+		array( 'wp-block-library' ),
+		file_exists( $guc_path ) ? filemtime( $guc_path ) : '1.0.0'
+	);
+
+	 // Theme CSS
+    $theme_css_path = get_template_directory() . '/style.css';
+    wp_enqueue_style(
+        'your_theme_styles',
+        get_template_directory_uri() . '/style.css',
+        array( 'gutenberg-utility-classes' ),
+        file_exists( $theme_css_path ) ? filemtime( $theme_css_path ) : '1.0.0'
+    );
 }
-add_action('after_setup_theme', 'theme_editor_styles');
+add_action( 'enqueue_block_assets', 'your_theme_assets_block_assets' );
 ```
 
 ## Features
@@ -621,6 +644,24 @@ cssLibrary['my-component'] = {
 }`
 };
 ```
+
+## Credits & Attributions
+
+### Gutenberg Utility Classes
+
+This project incorporates CSS from **[Gutenberg Utility Classes](https://github.com/muax3000/gutenberg-utility-classes)** by **[muax3000](https://github.com/muax3000)**.
+
+The library provides responsive utility classes designed specifically for WordPress Gutenberg blocks, using WordPress-native breakpoints (599px, 600-781px, 782px+) and the compound selector pattern (`.custom-class.wp-block-*`) for reliable overrides.
+
+**Key features from GUC:**
+- Visibility utilities: `.hide-on-mobile`, `.show-on-desktop`
+- Stacking utilities: `.stack-on-mobile.wp-block-columns`
+- Width utilities: `.width-50-tablet`, `.width-100-desktop`
+- Order utilities: `.order-first-mobile`, `.order-last-desktop`
+- Spacing utilities: `.m-20-mobile`, `.p-40-tablet` (using `--wp--preset--spacing--*`)
+- Text alignment: `.text-center-mobile`, `.text-left-desktop`
+
+License: GPL-2.0+
 
 ## License
 

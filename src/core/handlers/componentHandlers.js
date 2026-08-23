@@ -27,18 +27,18 @@ export function handleCardGroup(el) {
   let columnsInner = ''
 
   for (const card of cards) {
-    // Each card -> wp:column with .card class
+    // Each card -> wp:column with .card class (custom-class-first pattern)
     const columnAttrs = { className: 'card' }
     const cardInner = this.processCardChildrenWithClasses(card)
 
     columnsInner += this.wrapBlock('wp:column', columnAttrs,
-      '<div class="wp-block-column card">' + cardInner + '</div>'
+      '<div class="card wp-block-column">' + cardInner + '</div>'
     )
   }
 
   const columnsAttrs = { className: 'card-group' }
   return this.wrapBlock('wp:columns', columnsAttrs,
-    '<div class="wp-block-columns card-group">' + columnsInner + '</div>'
+    '<div class="card-group wp-block-columns">' + columnsInner + '</div>'
   )
 }
 
@@ -63,7 +63,7 @@ export function processCardChildrenWithClasses(el) {
     const alt = cardImg.getAttribute('alt') || ''
     const imgAttrs = { className: 'card-img-top' }
     output += this.wrapBlock('wp:image', imgAttrs,
-      '<figure class="wp-block-image card-img-top"><img src="' + src + '" alt="' + alt + '"/></figure>'
+      '<figure class="card-img-top wp-block-image"><img src="' + src + '" alt="' + alt + '"/></figure>'
     )
   }
 
@@ -72,7 +72,7 @@ export function processCardChildrenWithClasses(el) {
     const headerAttrs = { className: 'card-header' }
     const headerContent = this.processChildren(cardHeader)
     output += this.wrapBlock('wp:group', headerAttrs,
-      '<div class="wp-block-group card-header">' + headerContent + '</div>'
+      '<div class="card-header wp-block-group">' + headerContent + '</div>'
     )
   }
 
@@ -81,7 +81,7 @@ export function processCardChildrenWithClasses(el) {
     const bodyAttrs = { className: 'card-body' }
     const bodyContent = this.processCardBodyContent(cardBody)
     output += this.wrapBlock('wp:group', bodyAttrs,
-      '<div class="wp-block-group card-body">' + bodyContent + '</div>'
+      '<div class="card-body wp-block-group">' + bodyContent + '</div>'
     )
   }
 
@@ -95,7 +95,7 @@ export function processCardChildrenWithClasses(el) {
       '<p class="has-small-font-size text-muted">' + footerText + '</p>'
     )
     output += this.wrapBlock('wp:group', footerAttrs,
-      '<div class="wp-block-group card-footer">' + footerContent + '</div>'
+      '<div class="card-footer wp-block-group">' + footerContent + '</div>'
     )
   }
 
@@ -119,7 +119,7 @@ export function processCardBodyContent(el) {
       const level = tagName.match(/^h([1-6])$/) ? parseInt(tagName.charAt(1)) : 5
       const attrs = { level: level, className: 'card-title' }
       output += this.wrapBlock('wp:heading', attrs,
-        '<' + tagName + ' class="wp-block-heading card-title">' + child.innerHTML + '</' + tagName + '>'
+        '<' + tagName + ' class="card-title wp-block-heading">' + child.innerHTML + '</' + tagName + '>'
       )
     } else if (child.classList.contains('card-text')) {
       this.trackCss('card-text')
@@ -143,38 +143,19 @@ export function processCardBodyContent(el) {
  * @returns {string} Gutenberg block markup
  */
 export function handleCard(el) {
-  const spacing = this.extractSpacing(el)
-  const colors = this.extractColors(el)
-  const unmappedStyles = this.extractUnmappedStyles(el)
+  this.trackCss('card')
 
-  const attrs = {
-    style: {
-      border: { radius: '0.75rem' }
-    }
-  }
-
-  if (Object.keys(spacing).length > 0) {
-    attrs.style.spacing = spacing
-  } else {
-    attrs.style.spacing = {
-      padding: {
-        top: 'var:preset|spacing|lg',
-        right: 'var:preset|spacing|lg',
-        bottom: 'var:preset|spacing|lg',
-        left: 'var:preset|spacing|lg'
-      }
-    }
-  }
-
-  const bgColor = colors.backgroundColor || 'white'
-  attrs.backgroundColor = bgColor
+  // Preserve inline styles from original element (e.g., width: 18rem)
+  const originalStyle = el.getAttribute('style') || ''
+  const styleAttr = originalStyle ? ' style="' + originalStyle + '"' : ''
 
   const children = this.processCardChildren(el)
-  const htmlAttrs = this.generateHtmlAttrs(attrs, unmappedStyles)
 
-  // HTML must include has-* classes and styles that WordPress generates from JSON attributes
+  // Simple output: className only, let CSS handle styling
+  const attrs = { className: 'card' }
+
   return this.wrapBlock('wp:group', attrs,
-    '<div class="wp-block-group' + htmlAttrs.classes + '"' + htmlAttrs.style + '>' + children + '</div>'
+    '<div class="card wp-block-group"' + styleAttr + '>' + children + '</div>'
   )
 }
 
@@ -275,7 +256,7 @@ export function handleAlert(el) {
     )
 
     return this.wrapBlock('wp:group', attrs,
-      '<div class="wp-block-group ' + filteredClasses + '">' + svgBlock + textBlock + '</div>'
+      '<div class="' + filteredClasses + ' wp-block-group">' + svgBlock + textBlock + '</div>'
     )
   }
 
@@ -291,7 +272,7 @@ export function handleAlert(el) {
   )
 
   return this.wrapBlock('wp:group', attrs,
-    '<div class="wp-block-group ' + filteredClasses + '">' + innerBlock + '</div>'
+    '<div class="' + filteredClasses + ' wp-block-group">' + innerBlock + '</div>'
   )
 }
 
@@ -332,7 +313,7 @@ export function handleBreadcrumb(el) {
 
   // Wrap in wp:list (ordered)
   const listBlock = this.wrapBlock('wp:list', { ordered: true, className: 'breadcrumb' },
-    '<ol class="wp-block-list breadcrumb">' + listItems + '</ol>'
+    '<ol class="breadcrumb wp-block-list">' + listItems + '</ol>'
   )
 
   // If original was nav, wrap in wp:group with tagName nav
@@ -343,7 +324,7 @@ export function handleBreadcrumb(el) {
       layout: { type: 'default' }
     }
     return this.wrapBlock('wp:group', navAttrs,
-      '<nav class="wp-block-group breadcrumb-nav">' + listBlock + '</nav>'
+      '<nav class="breadcrumb-nav wp-block-group">' + listBlock + '</nav>'
     )
   }
 
@@ -404,7 +385,7 @@ export function handleButtonGroup(el) {
   }
 
   return this.wrapBlock('wp:group', attrs,
-    '<div class="wp-block-group btn-group">' + output + '</div>'
+    '<div class="btn-group wp-block-group">' + output + '</div>'
   )
 }
 
@@ -491,7 +472,7 @@ export function handleDropdownMenu(el) {
 
   const listAttrs = { className: 'dropdown-menu' }
   return this.wrapBlock('wp:list', listAttrs,
-    '<ul class="wp-block-list dropdown-menu">' + listInner + '</ul>'
+    '<ul class="dropdown-menu wp-block-list">' + listInner + '</ul>'
   )
 }
 
@@ -535,7 +516,7 @@ export function handleListGroup(el) {
 
   const listAttrs = { className: 'list-group' }
   return this.wrapBlock('wp:list', listAttrs,
-    '<ul class="wp-block-list list-group">' + listItems + '</ul>'
+    '<ul class="list-group wp-block-list">' + listItems + '</ul>'
   )
 }
 
