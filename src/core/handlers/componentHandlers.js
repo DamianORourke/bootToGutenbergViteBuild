@@ -145,17 +145,62 @@ export function processCardBodyContent(el) {
 export function handleCard(el) {
   this.trackCss('card')
 
-  // Preserve inline styles from original element (e.g., width: 18rem)
+  // Collect all classes from original element
+  const originalClasses = Array.from(el.classList || [])
+
+  // Separate utility classes from card class
+  // Utility classes like width-25-desktop should pass through
+  const utilityClasses = originalClasses.filter(cls =>
+    cls !== 'card' && (
+      cls.startsWith('width-') ||
+      cls.startsWith('m-') || cls.startsWith('mt-') || cls.startsWith('mb-') ||
+      cls.startsWith('ms-') || cls.startsWith('me-') || cls.startsWith('mx-') || cls.startsWith('my-') ||
+      cls.startsWith('p-') || cls.startsWith('pt-') || cls.startsWith('pb-') ||
+      cls.startsWith('ps-') || cls.startsWith('pe-') || cls.startsWith('px-') || cls.startsWith('py-') ||
+      cls.startsWith('gap-') || cls.startsWith('order-') ||
+      cls.startsWith('hide-') || cls.startsWith('show-') ||
+      cls.startsWith('stack-') || cls.startsWith('text-')
+    )
+  )
+
+  // Custom classes (not Bootstrap, not utility)
+  const customClasses = originalClasses.filter(cls =>
+    cls !== 'card' && !utilityClasses.includes(cls) &&
+    !cls.startsWith('d-') && !cls.startsWith('flex-') &&
+    !cls.startsWith('justify-') && !cls.startsWith('align-')
+  )
+
+  // Build className: utility classes + custom classes + card
+  const classNames = [...utilityClasses, ...customClasses, 'card'].filter(Boolean)
+  const attrs = { className: classNames.join(' ') }
+
+  // Preserve inline styles with matching JSON decorator
   const originalStyle = el.getAttribute('style') || ''
+  if (originalStyle) {
+    // Parse style to JSON format for decorator
+    const styleObj = {}
+    originalStyle.split(';').forEach(decl => {
+      const [prop, value] = decl.split(':').map(s => s.trim())
+      if (prop && value) {
+        // Convert CSS property to camelCase for JSON
+        const camelProp = prop.replace(/-([a-z])/g, (_, c) => c.toUpperCase())
+        styleObj[camelProp] = value
+      }
+    })
+    if (Object.keys(styleObj).length > 0) {
+      attrs.style = styleObj
+    }
+  }
   const styleAttr = originalStyle ? ' style="' + originalStyle + '"' : ''
 
-  const children = this.processCardChildren(el)
+  // Use proper card children processing with Bootstrap classes
+  const children = this.processCardChildrenWithClasses(el)
 
-  // Simple output: className only, let CSS handle styling
-  const attrs = { className: 'card' }
+  // Build class list: wp-block-column + utility + custom + card
+  const divClasses = ['wp-block-column', ...utilityClasses, ...customClasses, 'card'].filter(Boolean)
 
-  return this.wrapBlock('wp:group', attrs,
-    '<div class="card wp-block-group"' + styleAttr + '>' + children + '</div>'
+  return this.wrapBlock('wp:column', attrs,
+    '<div class="' + divClasses.join(' ') + '"' + styleAttr + '>' + children + '</div>'
   )
 }
 

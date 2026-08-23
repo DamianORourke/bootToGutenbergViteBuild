@@ -137,12 +137,14 @@ export const examples = {
   // CONTENT
   // ==========================================================================
 
-  card: `<div class="card" style="width: 18rem;">
+  card: `<div class="width-25-desktop card">
 <img src="https://university-game.tiltroleplay.com/wp-content/uploads/2026/08/screenshot.png" class="card-img-top" alt="...">
 <div class="card-body">
   <h5 class="card-title">Card title</h5>
-  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-  <a href="#" class="btn btn-primary">Go somewhere</a>
+  <p class="card-text">This is a wider card with supporting text below.</p>
+</div>
+<div class="card-footer">
+  <small class="text-muted">Last updated 3 mins ago</small>
 </div>
 </div>`,
 

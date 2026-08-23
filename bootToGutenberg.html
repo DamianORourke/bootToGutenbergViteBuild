@@ -1090,39 +1090,64 @@
       }
 
       handleCard(el) {
-        const spacing = this.extractSpacing(el);
-        const colors = this.extractColors(el);
-        const unmappedStyles = this.extractUnmappedStyles(el);
+        this.trackCss('card');
 
-        const attrs = {
-          style: {
-            border: { radius: '0.75rem' }
-          }
-        };
+        // Collect all classes from original element
+        const originalClasses = Array.from(el.classList || []);
 
-        if (Object.keys(spacing).length > 0) {
-          attrs.style.spacing = spacing;
-        } else {
-          attrs.style.spacing = {
-            padding: {
-              top: 'var:preset|spacing|lg',
-              right: 'var:preset|spacing|lg',
-              bottom: 'var:preset|spacing|lg',
-              left: 'var:preset|spacing|lg'
+        // Separate utility classes from card class
+        // Utility classes like width-25-desktop should pass through
+        const utilityClasses = originalClasses.filter(cls =>
+          cls !== 'card' && (
+            cls.startsWith('width-') ||
+            cls.startsWith('m-') || cls.startsWith('mt-') || cls.startsWith('mb-') ||
+            cls.startsWith('ms-') || cls.startsWith('me-') || cls.startsWith('mx-') || cls.startsWith('my-') ||
+            cls.startsWith('p-') || cls.startsWith('pt-') || cls.startsWith('pb-') ||
+            cls.startsWith('ps-') || cls.startsWith('pe-') || cls.startsWith('px-') || cls.startsWith('py-') ||
+            cls.startsWith('gap-') || cls.startsWith('order-') ||
+            cls.startsWith('hide-') || cls.startsWith('show-') ||
+            cls.startsWith('stack-') || cls.startsWith('text-')
+          )
+        );
+
+        // Custom classes (not Bootstrap, not utility)
+        const customClasses = originalClasses.filter(cls =>
+          cls !== 'card' && !utilityClasses.includes(cls) &&
+          !cls.startsWith('d-') && !cls.startsWith('flex-') &&
+          !cls.startsWith('justify-') && !cls.startsWith('align-')
+        );
+
+        // Build className: utility classes + custom classes + card
+        const classNames = [...utilityClasses, ...customClasses, 'card'].filter(Boolean);
+        const attrs = { className: classNames.join(' ') };
+
+        // Preserve inline styles with matching JSON decorator
+        const originalStyle = el.getAttribute('style') || '';
+        if (originalStyle) {
+          // Parse style to JSON format for decorator
+          const styleObj = {};
+          originalStyle.split(';').forEach(decl => {
+            const [prop, value] = decl.split(':').map(s => s.trim());
+            if (prop && value) {
+              // Convert CSS property to camelCase for JSON
+              const camelProp = prop.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+              styleObj[camelProp] = value;
             }
-          };
+          });
+          if (Object.keys(styleObj).length > 0) {
+            attrs.style = styleObj;
+          }
         }
+        const styleAttr = originalStyle ? ' style="' + originalStyle + '"' : '';
 
-        const bgColor = colors.backgroundColor || 'white';
-        attrs.backgroundColor = bgColor;
-        // Note: shadow removed - add to theme.json if needed
+        // Use proper card children processing with Bootstrap classes
+        const children = this.processCardChildrenWithClasses(el);
 
-        const children = this.processCardChildren(el);
-        const htmlAttrs = this.generateHtmlAttrs(attrs, unmappedStyles);
+        // Build class list: wp-block-column + utility + custom + card
+        const divClasses = ['wp-block-column', ...utilityClasses, ...customClasses, 'card'].filter(Boolean);
 
-        // HTML must include has-* classes and styles that WordPress generates from JSON attributes
-        return this.wrapBlock('wp:group', attrs,
-          '<div class="wp-block-group' + htmlAttrs.classes + '"' + htmlAttrs.style + '>' + children + '</div>'
+        return this.wrapBlock('wp:column', attrs,
+          '<div class="' + divClasses.join(' ') + '"' + styleAttr + '>' + children + '</div>'
         );
       }
 
@@ -2592,12 +2617,14 @@
 </div>`,
 
       // Content
-      card: `<div class="card" style="width: 18rem;">
+      card: `<div class="width-25-desktop card">
   <img src="https://university-game.tiltroleplay.com/wp-content/uploads/2026/08/screenshot.png" class="card-img-top" alt="...">
   <div class="card-body">
     <h5 class="card-title">Card title</h5>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
+    <p class="card-text">This is a wider card with supporting text below.</p>
+  </div>
+  <div class="card-footer">
+    <small class="text-muted">Last updated 3 mins ago</small>
   </div>
 </div>`,
 
