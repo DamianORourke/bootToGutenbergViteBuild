@@ -173,6 +173,18 @@ export class BootstrapToGutenbergConverter {
       '12': '100%'
     }
 
+    // Bootstrap spacing (0-5) to WordPress preset spacing (0, 20, 30, 40, 50, 60, 70, 80)
+    // Bootstrap: 0=0, 1=0.25rem, 2=0.5rem, 3=1rem, 4=1.5rem, 5=3rem
+    // GUC uses --wp--preset--spacing--{20,30,40,50,60,70,80}
+    this.bootstrapSpacingToPreset = {
+      '0': '0',
+      '1': '20',
+      '2': '30',
+      '3': '40',
+      '4': '50',
+      '5': '50'  // BS 5 (3rem) maps to preset 50 (mobile-first)
+    }
+
     // Utility class to inline style mapping
     // Maps Bootstrap utilities to CSS property-value pairs for inline styles
     this.utilityStyleMap = {
@@ -935,6 +947,158 @@ export class BootstrapToGutenbergConverter {
         }
       }
     }
+  }
+
+  // Map Bootstrap utility classes to GUC (Gutenberg Utility Classes)
+  // Returns { gucClasses: [], unmappedBootstrap: [], consumedClasses: [], wpAttrs: {} }
+  // consumedClasses are Bootstrap classes that were successfully mapped
+  // wpAttrs contains WordPress block attributes (style object with color, typography, etc.)
+  mapBootstrapToGucClasses(el) {
+    const classes = Array.from(el.classList || [])
+    const gucClasses = []
+    const unmappedBootstrap = []
+    const consumedClasses = []
+    const wpAttrs = {} // WordPress block attributes
+    let hasRounded = false
+
+    for (const cls of classes) {
+      let mapped = false
+
+      // Spacing utilities: m-*, my-*, mx-*, p-*, py-*, px-*, gap-*
+      // Bootstrap pattern: {type}{axis?}-{size} where size is 0-5
+      // GUC pattern: {type}{axis?}-{preset}-mobile where preset is 0,20,30,40,50,60,70,80
+      const spacingMatch = cls.match(/^(m|p)(y|x)?-([0-5])$/)
+      if (spacingMatch) {
+        const [, type, axis, size] = spacingMatch
+        const preset = this.bootstrapSpacingToPreset[size]
+        if (preset) {
+          const gucClass = `${type}${axis || ''}-${preset}-mobile`
+          gucClasses.push(gucClass)
+          consumedClasses.push(cls)
+          mapped = true
+        }
+      }
+
+      // Gap utilities: gap-*
+      const gapMatch = cls.match(/^gap-([0-5])$/)
+      if (gapMatch) {
+        const [, size] = gapMatch
+        const preset = this.bootstrapSpacingToPreset[size]
+        if (preset) {
+          gucClasses.push(`gap-${preset}-mobile`)
+          consumedClasses.push(cls)
+          mapped = true
+        }
+      }
+
+      // Text alignment: text-center, text-start, text-end
+      // These apply at all breakpoints, so use style attribute not GUC responsive classes
+      if (cls === 'text-center' || cls === 'text-start' || cls === 'text-end') {
+        const alignMap = {
+          'text-center': 'center',
+          'text-start': 'left',
+          'text-end': 'right'
+        }
+        wpAttrs.style = wpAttrs.style || {}
+        wpAttrs.style.typography = wpAttrs.style.typography || {}
+        wpAttrs.style.typography.textAlign = alignMap[cls]
+        consumedClasses.push(cls)
+        mapped = true
+      }
+
+      // Background colors: bg-* -> WordPress style.color.background with var:preset format
+      const bgColorPresetMap = {
+        'bg-primary': 'primary',
+        'bg-secondary': 'secondary',
+        'bg-success': 'success',
+        'bg-danger': 'error',
+        'bg-warning': 'warning',
+        'bg-info': 'info',
+        'bg-light': 'light',
+        'bg-dark': 'dark',
+        'bg-white': 'white',
+        'bg-body-tertiary': 'surface',
+        'bg-body-secondary': 'surface',
+        'bg-body': 'base'
+      }
+      if (bgColorPresetMap[cls]) {
+        wpAttrs.style = wpAttrs.style || {}
+        wpAttrs.style.color = wpAttrs.style.color || {}
+        wpAttrs.style.color.background = 'var:preset|color|' + bgColorPresetMap[cls]
+        consumedClasses.push(cls)
+        mapped = true
+      }
+
+      // Text colors: text-* -> WordPress style.color.text with var:preset format
+      const textColorPresetMap = {
+        'text-primary': 'primary',
+        'text-secondary': 'secondary',
+        'text-success': 'success',
+        'text-danger': 'error',
+        'text-warning': 'warning',
+        'text-info': 'info',
+        'text-light': 'light',
+        'text-dark': 'dark',
+        'text-white': 'white',
+        'text-muted': 'text-muted',
+        'text-body-emphasis': 'contrast'
+      }
+      if (textColorPresetMap[cls]) {
+        wpAttrs.style = wpAttrs.style || {}
+        wpAttrs.style.color = wpAttrs.style.color || {}
+        wpAttrs.style.color.text = 'var:preset|color|' + textColorPresetMap[cls]
+        consumedClasses.push(cls)
+        mapped = true
+      }
+
+      // Rounded utilities: preserve class AND add border, border-1, border-secondary
+      const roundedMatch = cls.match(/^rounded(-[0-5]|-circle|-pill)?$/)
+      if (roundedMatch) {
+        gucClasses.push(cls) // Preserve rounded-* class
+        hasRounded = true
+        consumedClasses.push(cls)
+        mapped = true
+      }
+
+      // Shadow utilities: preserve as-is
+      if (/^shadow(-sm|-lg|-none)?$/.test(cls)) {
+        gucClasses.push(cls)
+        consumedClasses.push(cls)
+        mapped = true
+      }
+
+      // Border utilities: preserve as-is
+      if (cls === 'border' || /^border-[0-5]$/.test(cls) || /^border-(primary|secondary|success|danger|warning|info|light|dark|white)$/.test(cls)) {
+        gucClasses.push(cls)
+        consumedClasses.push(cls)
+        mapped = true
+      }
+
+      // Track unmapped Bootstrap utilities for reporting
+      if (!mapped) {
+        const bsUtilityPatterns = [
+          /^(bg-|text-|border-|rounded|shadow|d-|flex-|justify-|align-|order-|col-)/
+        ]
+        if (bsUtilityPatterns.some(p => p.test(cls))) {
+          unmappedBootstrap.push(cls)
+        }
+      }
+    }
+
+    // If rounded was used, add border, border-1, and border-secondary for visibility
+    if (hasRounded) {
+      if (!gucClasses.includes('border')) {
+        gucClasses.push('border')
+      }
+      if (!gucClasses.some(c => /^border-[0-5]$/.test(c))) {
+        gucClasses.push('border-1')
+      }
+      if (!gucClasses.some(c => /^border-(primary|secondary|success|danger|warning|info|light|dark|white)$/.test(c))) {
+        gucClasses.push('border-secondary')
+      }
+    }
+
+    return { gucClasses, unmappedBootstrap, consumedClasses, wpAttrs }
   }
 
   /**

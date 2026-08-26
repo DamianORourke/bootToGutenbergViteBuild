@@ -19,10 +19,10 @@
  */
 export function handleContainer(el) {
   const isFluid = this.hasClass(el, 'container-fluid')
-  const spacing = this.extractSpacing(el)
-  const colors = this.extractColors(el)
-  const utilityClasses = this.extractUtilityClasses(el)
   const unmappedStyles = this.extractUnmappedStyles(el)
+
+  // Map Bootstrap utilities to GUC classes and WP attributes
+  const { gucClasses, unmappedBootstrap, consumedClasses, wpAttrs } = this.mapBootstrapToGucClasses(el)
 
   const attrs = {
     layout: { type: 'constrained' }
@@ -32,21 +32,14 @@ export function handleContainer(el) {
     attrs.align = 'full'
   }
 
-  if (Object.keys(spacing).length > 0) {
-    attrs.style = { spacing: spacing }
+  // Apply WordPress style attributes from mapping (color, spacing, border, etc.)
+  if (wpAttrs.style) {
+    attrs.style = wpAttrs.style
   }
 
-  if (colors.backgroundColor) {
-    attrs.backgroundColor = colors.backgroundColor
-  }
-
-  if (colors.textColor) {
-    attrs.textColor = colors.textColor
-  }
-
-  // Preserve utility classes
-  if (utilityClasses.length > 0) {
-    attrs.className = utilityClasses.join(' ')
+  // Add GUC utility classes to className
+  if (gucClasses.length > 0) {
+    attrs.className = gucClasses.join(' ')
   }
 
   const children = this.processChildren(el)
@@ -192,34 +185,21 @@ export function handleFlexGroup(el) {
  * @returns {string} Gutenberg block markup
  */
 export function handleGroup(el) {
-  const spacing = this.extractSpacing(el)
-  const colors = this.extractColors(el)
-  const textAlign = this.extractTextAlign(el)
-  const utilityClasses = this.extractUtilityClasses(el)
   const unmappedStyles = this.extractUnmappedStyles(el)
+
+  // Map Bootstrap utilities to GUC classes and WP attributes
+  const { gucClasses, unmappedBootstrap, consumedClasses, wpAttrs } = this.mapBootstrapToGucClasses(el)
 
   const attrs = {}
 
-  if (Object.keys(spacing).length > 0) {
-    attrs.style = { spacing: spacing }
+  // Apply WordPress style attributes from mapping (color, spacing, border, etc.)
+  if (wpAttrs.style) {
+    attrs.style = wpAttrs.style
   }
 
-  if (colors.backgroundColor) {
-    attrs.backgroundColor = colors.backgroundColor
-  }
-
-  if (colors.textColor) {
-    attrs.textColor = colors.textColor
-  }
-
-  if (textAlign) {
-    attrs.layout = { type: 'constrained' }
-    attrs.align = textAlign
-  }
-
-  // Preserve utility classes
-  if (utilityClasses.length > 0) {
-    attrs.className = utilityClasses.join(' ')
+  // Add GUC utility classes to className
+  if (gucClasses.length > 0) {
+    attrs.className = gucClasses.join(' ')
   }
 
   const children = this.processChildren(el)
@@ -242,14 +222,24 @@ export function handleGroup(el) {
  * @returns {string} Gutenberg block markup
  */
 export function handleBorderElement(el) {
-  const utilityClasses = this.extractUtilityClasses(el)
   const unmappedStyles = this.extractUnmappedStyles(el)
+
+  // Map Bootstrap utilities to GUC classes and WP attributes
+  const { gucClasses, unmappedBootstrap, consumedClasses, wpAttrs } = this.mapBootstrapToGucClasses(el)
+
   const children = this.processChildren(el)
   const tagName = el.tagName.toLowerCase()
 
   const attrs = {}
-  if (utilityClasses.length > 0) {
-    attrs.className = utilityClasses.join(' ')
+
+  // Apply WordPress style attributes from mapping (color, spacing, border, etc.)
+  if (wpAttrs.style) {
+    attrs.style = wpAttrs.style
+  }
+
+  // Add GUC utility classes to className
+  if (gucClasses.length > 0) {
+    attrs.className = gucClasses.join(' ')
   }
 
   // Recognized container elements can become wp:group
@@ -264,7 +254,7 @@ export function handleBorderElement(el) {
   }
 
   // Non-container empty border element - preserve original tag using wp:html
-  const classAttr = utilityClasses.length ? ' class="' + utilityClasses.join(' ') + '"' : ''
+  const classAttr = gucClasses.length ? ' class="' + gucClasses.join(' ') + '"' : ''
   const styleAttr = unmappedStyles ? ' style="' + unmappedStyles + '"' : ''
   return this.wrapHtmlBlock('<' + tagName + classAttr + styleAttr + '></' + tagName + '>')
 }

@@ -21,18 +21,19 @@
  * @returns {string} Gutenberg block markup
  */
 export function handleCardGroup(el) {
-  // Card group -> wp:columns with Bootstrap class names for CSS styling
+  // Card group → wp:columns with card-group class
+  // Parent controls layout, children just need card class
   this.trackCss('card-group')
+  this.trackCss('card')
   const cards = el.querySelectorAll(':scope > .card')
   let columnsInner = ''
 
   for (const card of cards) {
-    // Each card -> wp:column with .card class (custom-class-first pattern)
-    const columnAttrs = { className: 'card' }
     const cardInner = this.processCardChildrenWithClasses(card)
+    const columnAttrs = { className: 'card' }
 
     columnsInner += this.wrapBlock('wp:column', columnAttrs,
-      '<div class="card wp-block-column">' + cardInner + '</div>'
+      '<div class="wp-block-column card">' + cardInner + '</div>'
     )
   }
 

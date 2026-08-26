@@ -10,10 +10,10 @@
  * import { examples, exampleNames, exampleCategories } from './data/examples.js'
  *
  * // Get HTML for a specific example
- * const heroHtml = examples.hero
+ * const jumbotronHtml = examples.jumbotron
  *
  * // Get the display name for the dropdown
- * const heroLabel = exampleNames.hero  // 'Hero Section'
+ * const jumbotronLabel = exampleNames.jumbotron  // 'Jumbotron'
  *
  * // Iterate by category
  * for (const [category, keys] of Object.entries(exampleCategories)) {
@@ -31,15 +31,28 @@ export const examples = {
   // LAYOUT PATTERNS
   // ==========================================================================
 
-  hero: `<div class="container py-5">
-<div class="row">
-  <div class="col-12 text-center">
-    <h1 class="display-4 mb-4">Welcome to Our Site</h1>
-    <p class="lead text-muted mb-4">Discover amazing features and services that will transform your business.</p>
-    <a href="#" class="btn btn-primary btn-lg me-2">Get Started</a>
-    <a href="#" class="btn btn-outline-secondary btn-lg">Learn More</a>
-  </div>
-</div>
+  jumbotron: `<div class="container my-5">
+    <div class="p-5 text-center bg-body-tertiary rounded-3">
+        <svg class="bi mt-4 mb-3" style="color: var(--bs-indigo);" width="100" height="100" aria-hidden="true">
+            <use xlink:href="#bootstrap"></use>
+        </svg>
+        <h1 class="text-body-emphasis">Jumbotron with icon</h1>
+        <p class="col-lg-8 mx-auto fs-5 text-muted">
+            This is a custom jumbotron featuring an SVG image at the top, some longer text that wraps early thanks to a
+            responsive <code>.col-*</code> class, and a customized call to action.
+        </p>
+        <div class="d-inline-flex gap-2 mb-5">
+            <button class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill" type="button">
+                Call to action
+                <svg class="bi ms-2" width="24" height="24" aria-hidden="true">
+                    <use xlink:href="#arrow-right"></use>
+                </svg>
+            </button>
+            <button class="btn btn-outline-secondary btn-lg px-4 rounded-pill" type="button">
+                Secondary link
+            </button>
+        </div>
+    </div>
 </div>`,
 
   features: `<div class="container py-5">
@@ -765,7 +778,7 @@ Button with data-bs-target
  */
 export const exampleNames = {
   // Layout Patterns
-  hero: 'Hero Section',
+  jumbotron: 'Jumbotron',
   features: 'Features Grid',
   cta: 'Call to Action',
   pricing: 'Pricing Cards',
@@ -815,7 +828,7 @@ export const exampleNames = {
  * @type {Object.<string, string[]>}
  */
 export const exampleCategories = {
-  'Layout Patterns': ['hero', 'features', 'cta', 'pricing'],
+  'Layout Patterns': ['jumbotron', 'features', 'cta', 'pricing'],
   'Content': ['card', 'cardGroup', 'listGroup', 'table', 'figures'],
   'Components': [
     'accordion', 'alerts', 'badge', 'breadcrumb', 'buttons',

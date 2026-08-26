@@ -29,7 +29,7 @@
         <span class="selected-example" id="selectedExample">Custom HTML</span>
         <div class="dropdown-menu" id="examplesMenu">
           <div class="dropdown-category">Layout Patterns</div>
-          <button class="dropdown-item" onclick="loadExample('hero')">Hero Section</button>
+          <button class="dropdown-item" onclick="loadExample('jumbotron')">Jumbotron</button>
           <button class="dropdown-item" onclick="loadExample('features')">Features Grid</button>
           <button class="dropdown-item" onclick="loadExample('cta')">Call to Action</button>
           <button class="dropdown-item" onclick="loadExample('pricing')">Pricing Cards</button>
@@ -843,15 +843,16 @@
       }
 
       handleCardGroup(el) {
-        // Card group → wp:columns with Bootstrap class names for CSS styling
+        // Card group → wp:columns with card-group class
+        // Parent controls layout, children just need card class
         this.trackCss('card-group');
+        this.trackCss('card');
         const cards = el.querySelectorAll(':scope > .card');
         let columnsInner = '';
 
         for (const card of cards) {
-          // Each card → wp:column with .card class
-          const columnAttrs = { className: 'card' };
           const cardInner = this.processCardChildrenWithClasses(card);
+          const columnAttrs = { className: 'card' };
 
           columnsInner += this.wrapBlock('wp:column', columnAttrs,
             '<div class="wp-block-column card">' + cardInner + '</div>'
@@ -860,7 +861,7 @@
 
         const columnsAttrs = { className: 'card-group' };
         return this.wrapBlock('wp:columns', columnsAttrs,
-          '<div class="wp-block-columns card-group">' + columnsInner + '</div>'
+          '<div class="card-group wp-block-columns">' + columnsInner + '</div>'
         );
       }
 
@@ -2514,15 +2515,28 @@
 
     const examples = {
       // Layout Patterns
-      hero: `<div class="container py-5">
-  <div class="row">
-    <div class="col-12 text-center">
-      <h1 class="display-4 mb-4">Welcome to Our Site</h1>
-      <p class="lead text-muted mb-4">Discover amazing features and services that will transform your business.</p>
-      <a href="#" class="btn btn-primary btn-lg me-2">Get Started</a>
-      <a href="#" class="btn btn-outline-secondary btn-lg">Learn More</a>
+      jumbotron: `<div class="container my-5">
+    <div class="p-5 text-center bg-body-tertiary rounded-3">
+        <svg class="bi mt-4 mb-3" style="color: var(--bs-indigo);" width="100" height="100" aria-hidden="true">
+            <use xlink:href="#bootstrap"></use>
+        </svg>
+        <h1 class="text-body-emphasis">Jumbotron with icon</h1>
+        <p class="col-lg-8 mx-auto fs-5 text-muted">
+            This is a custom jumbotron featuring an SVG image at the top, some longer text that wraps early thanks to a
+            responsive <code>.col-*</code> class, and a customized call to action.
+        </p>
+        <div class="d-inline-flex gap-2 mb-5">
+            <button class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill" type="button">
+                Call to action
+                <svg class="bi ms-2" width="24" height="24" aria-hidden="true">
+                    <use xlink:href="#arrow-right"></use>
+                </svg>
+            </button>
+            <button class="btn btn-outline-secondary btn-lg px-4 rounded-pill" type="button">
+                Secondary link
+            </button>
+        </div>
     </div>
-  </div>
 </div>`,
 
       features: `<div class="container py-5">
@@ -4256,6 +4270,24 @@ p.badge {
 .border-dark { border-color: var(--wp--preset--color--dark) !important; }
 .border-white { border-color: var(--wp--preset--color--white) !important; }
 
+/* Backend/Editor button link targeting for borders */
+.border .wp-block-button__link { border: 1px solid var(--wp--preset--color--border, #dee2e6) !important; }
+.border-0 .wp-block-button__link { border: 0 !important; }
+.border-1 .wp-block-button__link { border-width: 1px !important; }
+.border-2 .wp-block-button__link { border-width: 2px !important; }
+.border-3 .wp-block-button__link { border-width: 3px !important; }
+.border-4 .wp-block-button__link { border-width: 4px !important; }
+.border-5 .wp-block-button__link { border-width: 5px !important; }
+.border-primary .wp-block-button__link { border-color: var(--wp--preset--color--primary) !important; }
+.border-secondary .wp-block-button__link { border-color: var(--wp--preset--color--secondary) !important; }
+.border-success .wp-block-button__link { border-color: var(--wp--preset--color--success) !important; }
+.border-danger .wp-block-button__link { border-color: var(--wp--preset--color--error) !important; }
+.border-warning .wp-block-button__link { border-color: var(--wp--preset--color--warning) !important; }
+.border-info .wp-block-button__link { border-color: var(--wp--preset--color--info, #0dcaf0) !important; }
+.border-light .wp-block-button__link { border-color: var(--wp--preset--color--surface) !important; }
+.border-dark .wp-block-button__link { border-color: var(--wp--preset--color--dark) !important; }
+.border-white .wp-block-button__link { border-color: var(--wp--preset--color--white) !important; }
+
 /* Rounded corners - scaled using theme spacing as base */
 .rounded { border-radius: var(--wp--preset--spacing--xs, 0.375rem) !important; }
 .rounded-0 { border-radius: 0 !important; }
@@ -4271,7 +4303,29 @@ p.badge {
 .rounded-top { border-top-left-radius: var(--wp--preset--spacing--xs, 0.375rem) !important; border-top-right-radius: var(--wp--preset--spacing--xs, 0.375rem) !important; }
 .rounded-end { border-top-right-radius: var(--wp--preset--spacing--xs, 0.375rem) !important; border-bottom-right-radius: var(--wp--preset--spacing--xs, 0.375rem) !important; }
 .rounded-bottom { border-bottom-right-radius: var(--wp--preset--spacing--xs, 0.375rem) !important; border-bottom-left-radius: var(--wp--preset--spacing--xs, 0.375rem) !important; }
-.rounded-start { border-top-left-radius: var(--wp--preset--spacing--xs, 0.375rem) !important; border-bottom-left-radius: var(--wp--preset--spacing--xs, 0.375rem) !important; }`
+.rounded-start { border-top-left-radius: var(--wp--preset--spacing--xs, 0.375rem) !important; border-bottom-left-radius: var(--wp--preset--spacing--xs, 0.375rem) !important; }
+
+/* Descendant selectors - when utility class is on wrapper, apply to child anchor */
+.rounded a { border-radius: var(--wp--preset--spacing--xs, 0.375rem) !important; }
+.rounded-0 a { border-radius: 0 !important; }
+.rounded-1 a { border-radius: calc(var(--wp--preset--spacing--xs, 0.25rem) * 0.5) !important; }
+.rounded-2 a { border-radius: var(--wp--preset--spacing--xs, 0.375rem) !important; }
+.rounded-3 a { border-radius: var(--wp--preset--spacing--sm, 0.5rem) !important; }
+.rounded-4 a { border-radius: var(--wp--preset--spacing--md, 1rem) !important; }
+.rounded-5 a { border-radius: var(--wp--preset--spacing--lg, 2rem) !important; }
+.rounded-circle a { border-radius: 50% !important; }
+.rounded-pill a { border-radius: 50rem !important; }
+
+/* Backend/Editor button link targeting */
+.rounded .wp-block-button__link { border-radius: var(--wp--preset--spacing--xs, 0.375rem) !important; }
+.rounded-0 .wp-block-button__link { border-radius: 0 !important; }
+.rounded-1 .wp-block-button__link { border-radius: calc(var(--wp--preset--spacing--xs, 0.25rem) * 0.5) !important; }
+.rounded-2 .wp-block-button__link { border-radius: var(--wp--preset--spacing--xs, 0.375rem) !important; }
+.rounded-3 .wp-block-button__link { border-radius: var(--wp--preset--spacing--sm, 0.5rem) !important; }
+.rounded-4 .wp-block-button__link { border-radius: var(--wp--preset--spacing--md, 1rem) !important; }
+.rounded-5 .wp-block-button__link { border-radius: var(--wp--preset--spacing--lg, 2rem) !important; }
+.rounded-circle .wp-block-button__link { border-radius: 50% !important; }
+.rounded-pill .wp-block-button__link { border-radius: 50rem !important; }`
       },
 
       // ===== SHADOW UTILITIES =====
@@ -4290,7 +4344,25 @@ p.badge {
 .shadow-xl { box-shadow: var(--wp--preset--shadow--xl, 0 1.5rem 4rem rgba(0, 0, 0, 0.2)) !important; }
 
 /* Inset shadows */
-.shadow-inset { box-shadow: var(--wp--preset--shadow--inset, inset 0 1px 2px rgba(0, 0, 0, 0.075)) !important; }`
+.shadow-inset { box-shadow: var(--wp--preset--shadow--inset, inset 0 1px 2px rgba(0, 0, 0, 0.075)) !important; }
+
+/* Descendant selectors - when utility class is on wrapper, apply to child anchor */
+.shadow-none a { box-shadow: none !important; }
+.shadow-sm a { box-shadow: var(--wp--preset--shadow--sm, 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)) !important; }
+.shadow a { box-shadow: var(--wp--preset--shadow--md, 0 0.5rem 1rem rgba(0, 0, 0, 0.15)) !important; }
+.shadow-lg a { box-shadow: var(--wp--preset--shadow--lg, 0 1rem 3rem rgba(0, 0, 0, 0.175)) !important; }
+.shadow-xs a { box-shadow: var(--wp--preset--shadow--xs, 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.05)) !important; }
+.shadow-xl a { box-shadow: var(--wp--preset--shadow--xl, 0 1.5rem 4rem rgba(0, 0, 0, 0.2)) !important; }
+.shadow-inset a { box-shadow: var(--wp--preset--shadow--inset, inset 0 1px 2px rgba(0, 0, 0, 0.075)) !important; }
+
+/* Backend/Editor button link targeting */
+.shadow-none .wp-block-button__link { box-shadow: none !important; }
+.shadow-sm .wp-block-button__link { box-shadow: var(--wp--preset--shadow--sm, 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)) !important; }
+.shadow .wp-block-button__link { box-shadow: var(--wp--preset--shadow--md, 0 0.5rem 1rem rgba(0, 0, 0, 0.15)) !important; }
+.shadow-lg .wp-block-button__link { box-shadow: var(--wp--preset--shadow--lg, 0 1rem 3rem rgba(0, 0, 0, 0.175)) !important; }
+.shadow-xs .wp-block-button__link { box-shadow: var(--wp--preset--shadow--xs, 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.05)) !important; }
+.shadow-xl .wp-block-button__link { box-shadow: var(--wp--preset--shadow--xl, 0 1.5rem 4rem rgba(0, 0, 0, 0.2)) !important; }
+.shadow-inset .wp-block-button__link { box-shadow: var(--wp--preset--shadow--inset, inset 0 1px 2px rgba(0, 0, 0, 0.075)) !important; }`
       }
     };
 
@@ -4421,7 +4493,7 @@ p.badge {
 
     // Example display names
     const exampleNames = {
-      hero: 'Hero Section',
+      jumbotron: 'Jumbotron',
       features: 'Features Grid',
       cta: 'Call to Action',
       pricing: 'Pricing Cards',
