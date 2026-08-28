@@ -243,6 +243,93 @@ export function extractColumnWidth(el) {
 }
 
 /**
+ * Extract Bootstrap column classes and pass through directly
+ * CSS in utility-classes.css handles responsive behavior with Bootstrap breakpoints
+ * e.g., col-12 col-md-6 → passes through as "col-12 col-md-6"
+ * Normalizes col-xs-N (Bootstrap 3/4) to col-N (Bootstrap 5)
+ * @param {Element} el - DOM element
+ * @returns {Object} { classes: string[], baseWidth: string|null }
+ */
+export function extractResponsiveColumnClasses(el) {
+  const classes = Array.from(el.classList || [])
+  const colClasses = []
+  let largestWidth = null
+
+  // Breakpoint priority for determining base width (largest breakpoint first)
+  const breakpointPriority = ['xxl', 'xl', 'lg', 'md', 'sm']
+
+  for (const cls of classes) {
+    // Match col-xs-{n} pattern (Bootstrap 3/4) - normalize to col-{n}
+    let match = cls.match(/^col-xs-(\d+)$/)
+    if (match) {
+      colClasses.push('col-' + match[1]) // Normalize to Bootstrap 5 syntax
+      if (largestWidth === null) {
+        largestWidth = match[1]
+      }
+      continue
+    }
+
+    // Match col-{bp}-{n} pattern (e.g., col-md-6, col-lg-4)
+    match = cls.match(/^col-(sm|md|lg|xl|xxl)-(\d+)$/)
+    if (match) {
+      colClasses.push(cls)
+      // Track width at largest breakpoint for JSON base width
+      if (largestWidth === null) {
+        const bpIndex = breakpointPriority.indexOf(match[1])
+        if (bpIndex !== -1) {
+          largestWidth = match[2]
+        }
+      }
+      continue
+    }
+
+    // Match col-{n} pattern (mobile base)
+    match = cls.match(/^col-(\d+)$/)
+    if (match) {
+      colClasses.push(cls)
+      // Only use as base width if no responsive classes found yet
+      if (largestWidth === null) {
+        largestWidth = match[1]
+      }
+    }
+  }
+
+  // If no column classes found, return empty
+  if (colClasses.length === 0) {
+    return { classes: [], baseWidth: null }
+  }
+
+  // Determine base width from largest breakpoint
+  // Re-scan for most specific breakpoint
+  for (const bp of breakpointPriority) {
+    for (const cls of colClasses) {
+      const match = cls.match(new RegExp(`^col-${bp}-(\\d+)$`))
+      if (match) {
+        largestWidth = match[1]
+        break
+      }
+    }
+    if (largestWidth) break
+  }
+
+  // Fallback to non-responsive col-N
+  if (!largestWidth) {
+    for (const cls of colClasses) {
+      const match = cls.match(/^col-(\d+)$/)
+      if (match) {
+        largestWidth = match[1]
+        break
+      }
+    }
+  }
+
+  return {
+    classes: colClasses,
+    baseWidth: largestWidth ? this.colWidthMap[largestWidth] : null
+  }
+}
+
+/**
  * Extract utility classes that should be preserved
  * @param {Element} el - DOM element
  * @returns {string[]} Array of class names

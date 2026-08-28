@@ -28,26 +28,102 @@ export function handleContainer(el) {
     layout: { type: 'constrained' }
   }
 
-  if (isFluid) {
-    attrs.align = 'full'
-  }
-
   // Apply WordPress style attributes from mapping (color, spacing, border, etc.)
   if (wpAttrs.style) {
     attrs.style = wpAttrs.style
   }
 
-  // Add GUC utility classes to className
+  // Build className: alignfull for fluid containers + any GUC utility classes
+  const classNames = []
+  if (isFluid) {
+    classNames.push('alignfull')
+  }
   if (gucClasses.length > 0) {
-    attrs.className = gucClasses.join(' ')
+    classNames.push(...gucClasses)
+  }
+  if (classNames.length > 0) {
+    attrs.className = classNames.join(' ')
   }
 
-  const children = this.processChildren(el)
+  // Process children, auto-wrapping consecutive columns in wp:columns
+  const children = processContainerChildren.call(this, el)
   const htmlAttrs = this.generateHtmlAttrs(attrs, unmappedStyles)
 
   return this.wrapBlock('wp:group', attrs,
     '<div class="wp-block-group' + htmlAttrs.classes + '"' + htmlAttrs.style + '>' + children + '</div>'
   )
+}
+
+/**
+ * Process container children, auto-wrapping consecutive columns in wp:columns
+ * Handles cases like: <div class="container"><h1>...</h1><div class="col-md-6">...</div><div class="col-md-6">...</div></div>
+ * @param {Element} el - Container element
+ * @returns {string} Processed children markup
+ */
+function processContainerChildren(el) {
+  let output = ''
+  let columnBuffer = []
+
+  const flushColumns = () => {
+    if (columnBuffer.length === 0) return
+
+    // Check if columns have responsive stacking pattern
+    const hasResponsiveStack = columnBuffer.some(col => {
+      const classes = Array.from(col.classList || [])
+      const hasFullWidthMobile = classes.some(c =>
+        /^col-12$/.test(c) || /^col-xs-12$/.test(c)
+      )
+      const hasResponsiveWidth = classes.some(c =>
+        /^col-(sm|md|lg|xl|xxl)-\d+$/.test(c) && !/col-(sm|md|lg|xl|xxl)-12$/.test(c)
+      )
+      return hasFullWidthMobile && hasResponsiveWidth
+    })
+
+    const columnsAttrs = {}
+    if (hasResponsiveStack) {
+      columnsAttrs.className = 'stack-on-mobile'
+    }
+
+    // Process each column
+    let columnsContent = ''
+    for (const col of columnBuffer) {
+      columnsContent += this.handleColumn(col)
+    }
+
+    const classStr = hasResponsiveStack
+      ? 'wp-block-columns stack-on-mobile'
+      : 'wp-block-columns'
+
+    output += this.wrapBlock('wp:columns', columnsAttrs,
+      '<div class="' + classStr + '">' + columnsContent + '</div>'
+    )
+
+    columnBuffer = []
+  }
+
+  for (const child of el.childNodes) {
+    // Skip whitespace-only text nodes (don't let them break column grouping)
+    if (child.nodeType === 3 && !child.textContent.trim()) {
+      continue
+    }
+
+    if (child.nodeType === 1 && this.isColumn(child)) {
+      // It's a column element - buffer it
+      columnBuffer.push(child)
+    } else {
+      // Not a column - flush any buffered columns first, then process this node
+      flushColumns()
+      const processed = this.processNode(child)
+      if (processed) {
+        output += processed
+      }
+    }
+  }
+
+  // Flush any remaining columns
+  flushColumns()
+
+  return output
 }
 
 /**
@@ -63,11 +139,45 @@ export function handleRow(el) {
     attrs.style = { spacing: spacing }
   }
 
+  // Check if columns have responsive stacking pattern
+  // e.g., col-12 col-md-6 means full width on mobile, 50% on desktop
+  const hasResponsiveStack = hasResponsiveStackPattern(el)
+  if (hasResponsiveStack) {
+    attrs.className = 'stack-on-mobile'
+  }
+
   const children = this.processChildren(el)
 
+  const classStr = hasResponsiveStack
+    ? 'wp-block-columns stack-on-mobile'
+    : 'wp-block-columns'
+
   return this.wrapBlock('wp:columns', attrs,
-    '<div class="wp-block-columns">' + children + '</div>'
+    '<div class="' + classStr + '">' + children + '</div>'
   )
+}
+
+/**
+ * Check if row contains columns with responsive stacking pattern
+ * Pattern: col-12 (or col-xs-12) combined with col-md-N (or col-lg-N, etc.)
+ * @param {Element} rowEl - Row element
+ * @returns {boolean}
+ */
+function hasResponsiveStackPattern(rowEl) {
+  const cols = rowEl.querySelectorAll('[class*="col-"]')
+  for (const col of cols) {
+    const classes = Array.from(col.classList || [])
+    const hasFullWidthMobile = classes.some(c =>
+      /^col-12$/.test(c) || /^col-xs-12$/.test(c)
+    )
+    const hasResponsiveWidth = classes.some(c =>
+      /^col-(sm|md|lg|xl|xxl)-\d+$/.test(c) && !/col-(sm|md|lg|xl|xxl)-12$/.test(c)
+    )
+    if (hasFullWidthMobile && hasResponsiveWidth) {
+      return true
+    }
+  }
+  return false
 }
 
 /**
@@ -76,16 +186,23 @@ export function handleRow(el) {
  * @returns {string} Gutenberg block markup
  */
 export function handleColumn(el) {
-  const width = this.extractColumnWidth(el)
+  const responsive = this.extractResponsiveColumnClasses(el)
   const spacing = this.extractSpacing(el)
   const colors = this.extractColors(el)
 
   const attrs = {}
+  const columnClasses = ['wp-block-column']
 
   // Add width as percentage string, but skip 100% (full-width is default)
   // Only add explicit width for partial columns (col-6 = 50%, col-4 = 33.33%, etc.)
-  if (width && width !== '100%') {
-    attrs.width = width
+  if (responsive.baseWidth && responsive.baseWidth !== '100%') {
+    attrs.width = responsive.baseWidth
+  }
+
+  // Add Bootstrap responsive column classes
+  if (responsive.classes.length > 0) {
+    attrs.className = responsive.classes.join(' ')
+    columnClasses.push(...responsive.classes)
   }
 
   if (Object.keys(spacing).length > 0 || colors.backgroundColor) {
@@ -104,7 +221,7 @@ export function handleColumn(el) {
   // Let WordPress generate flex-basis from the width JSON attribute
   // Don't add style manually - WordPress validates that JSON matches HTML
   return this.wrapBlock('wp:column', attrs,
-    '<div class="wp-block-column">' + children + '</div>'
+    '<div class="' + columnClasses.join(' ') + '">' + children + '</div>'
   )
 }
 
@@ -257,4 +374,86 @@ export function handleBorderElement(el) {
   const classAttr = gucClasses.length ? ' class="' + gucClasses.join(' ') + '"' : ''
   const styleAttr = unmappedStyles ? ' style="' + unmappedStyles + '"' : ''
   return this.wrapHtmlBlock('<' + tagName + classAttr + styleAttr + '></' + tagName + '>')
+}
+
+/**
+ * Handle ul/ol elements with utility classes as wp:list
+ * HTML entity (tag) is recognized first, then classList is processed
+ * All utility classes are converted to CSS and compiled into a single custom class
+ * @param {Element} el - DOM element
+ * @returns {string} Gutenberg block markup
+ */
+export function handleList(el) {
+  const tagName = el.tagName.toLowerCase()
+  const isOrdered = tagName === 'ol'
+
+  // Generate custom class - all utilities become CSS
+  const customClass = this.generateCustomClass(el)
+  const listClasses = ['wp-block-list']
+  const listAttrs = {}
+
+  if (isOrdered) {
+    listAttrs.ordered = true
+  }
+
+  // Only output the single custom class (not unmapped classes)
+  if (customClass) {
+    listAttrs.className = customClass.className
+    listClasses.push(customClass.className)
+  }
+
+  // Process list items
+  let listItems = ''
+  for (const child of el.children) {
+    if (child.tagName.toLowerCase() === 'li') {
+      listItems += handleListItem.call(this, child)
+    }
+  }
+
+  const listTag = isOrdered ? 'ol' : 'ul'
+  return this.wrapBlock('wp:list', listAttrs,
+    '<' + listTag + ' class="' + listClasses.join(' ') + '">' + listItems + '</' + listTag + '>'
+  )
+}
+
+/**
+ * Handle li elements as wp:list-item
+ * All utility classes are converted to CSS and compiled into a single custom class
+ * Content is wrapped in wp:html to preserve SVG, spans, and other complex content
+ * @param {Element} el - DOM element
+ * @returns {string} Gutenberg block markup
+ */
+export function handleListItem(el) {
+  // Generate custom class - all utilities become CSS
+  const customClass = this.generateCustomClass(el)
+  const itemClasses = []
+  const itemAttrs = {}
+
+  // Only output the single custom class (not unmapped classes)
+  if (customClass) {
+    itemAttrs.className = customClass.className
+    itemClasses.push(customClass.className)
+  }
+
+  // Collect all content from the li element
+  // Wrap in wp:html to preserve SVG, spans, and other complex content
+  let rawContent = ''
+  for (const node of el.childNodes) {
+    if (node.nodeType === 3) { // Node.TEXT_NODE
+      rawContent += node.textContent
+    } else if (node.nodeType === 1) { // Node.ELEMENT_NODE
+      rawContent += node.outerHTML
+    }
+  }
+
+  // Trim but preserve internal spacing
+  rawContent = rawContent.trim()
+
+  // Wrap content in wp:html block
+  const wrappedContent = this.wrapHtmlBlock(rawContent)
+
+  const classAttr = itemClasses.length > 0 ? ' class="' + itemClasses.join(' ') + '"' : ''
+  return this.wrapBlock('wp:list-item', itemAttrs,
+    '<li' + classAttr + '>' + wrappedContent + '</li>'
+  )
 }

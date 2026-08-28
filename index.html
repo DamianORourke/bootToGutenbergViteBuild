@@ -23,6 +23,7 @@
       <button class="btn btn-primary" id="convertBtn">Convert</button>
       <button class="btn btn-secondary" id="clearBtn">Clear</button>
       <button class="btn btn-success" id="copyBtn">Copy Output</button>
+      <button class="btn btn-pattern" id="patternBtn" disabled>Copy as Pattern</button>
       <button class="btn btn-info" id="cssBtn" disabled>CSS Styles</button>
       <div class="dropdown">
         <button class="btn btn-secondary" id="examplesBtn">Examples</button>
@@ -71,6 +72,67 @@
   </main>
 
   <div class="copy-notification" id="copyNotification">Copied to clipboard!</div>
+
+  <!-- ========== Pattern Modal ========== -->
+  <div class="pattern-modal-overlay" id="patternModalOverlay">
+    <div class="pattern-modal">
+      <h4>Copy as Pattern</h4>
+
+      <!-- Step 1: Form -->
+      <div id="patternFormStep" class="pattern-step">
+        <div class="pattern-form">
+          <div class="pattern-field">
+            <label for="patternTitle">Title</label>
+            <input type="text" id="patternTitle" placeholder="e.g., Section Two Column">
+          </div>
+          <div class="pattern-field">
+            <label for="patternSlug">Slug</label>
+            <div class="slug-input">
+              <span class="slug-prefix">theme/</span>
+              <input type="text" id="patternSlug" placeholder="section-two-column">
+            </div>
+          </div>
+          <div class="pattern-field">
+            <label for="patternCategory">Category</label>
+            <select id="patternCategory">
+              <option value="theme-sections">theme-sections</option>
+              <option value="theme-heroes">theme-heroes</option>
+              <option value="theme-cards">theme-cards</option>
+              <option value="theme-content">theme-content</option>
+              <option value="featured">featured</option>
+            </select>
+          </div>
+          <div class="pattern-field">
+            <label for="patternKeywords">Keywords</label>
+            <input type="text" id="patternKeywords" placeholder="section, columns, layout">
+          </div>
+          <div class="pattern-field">
+            <label for="patternDescription">Description</label>
+            <input type="text" id="patternDescription" placeholder="Brief description of the pattern">
+          </div>
+        </div>
+        <div class="pattern-modal-actions">
+          <button class="btn btn-sm btn-secondary" id="patternCancelBtn">Cancel</button>
+          <button class="btn btn-sm btn-pattern" id="generatePatternBtn">Generate Pattern</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Preview -->
+      <div id="patternPreviewStep" class="pattern-step" style="display: none;">
+        <div class="pattern-preview-container">
+          <div class="pattern-preview-header">
+            <span class="pattern-filename" id="patternFilename">patterns/example.php</span>
+          </div>
+          <pre class="pattern-preview-code" id="patternPreviewCode"></pre>
+        </div>
+        <div class="pattern-modal-actions">
+          <button class="btn btn-sm btn-secondary" id="patternBackBtn">Back</button>
+          <button class="btn btn-sm btn-pattern" id="copyPatternBtn">Copy to Clipboard</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ========== END Pattern Modal ========== -->
 
   <!-- CSS Styles Panel -->
   <div class="css-panel-overlay" id="cssPanelOverlay"></div>

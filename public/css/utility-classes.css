@@ -102,15 +102,16 @@
 
 /* .stack-on-mobile: column layout only on mobile */
 @media (max-width: 599px) {
+
   .stack-on-mobile.wp-block-columns,
   .stack-on-mobile.wp-block-group.is-layout-flex,
   .stack-on-mobile.wp-block-group.is-layout-row {
     flex-direction: column !important;
   }
 
-  .stack-on-mobile.wp-block-columns > *,
-  .stack-on-mobile.wp-block-group.is-layout-flex > *,
-  .stack-on-mobile.wp-block-group.is-layout-row > * {
+  .stack-on-mobile.wp-block-columns>*,
+  .stack-on-mobile.wp-block-group.is-layout-flex>*,
+  .stack-on-mobile.wp-block-group.is-layout-row>* {
     width: 100% !important;
     flex-basis: 100% !important;
   }
@@ -118,15 +119,16 @@
 
 /* .stack-on-tablet: column layout only on tablet */
 @media (min-width: 600px) and (max-width: 781px) {
+
   .stack-on-tablet.wp-block-columns,
   .stack-on-tablet.wp-block-group.is-layout-flex,
   .stack-on-tablet.wp-block-group.is-layout-row {
     flex-direction: column !important;
   }
 
-  .stack-on-tablet.wp-block-columns > *,
-  .stack-on-tablet.wp-block-group.is-layout-flex > *,
-  .stack-on-tablet.wp-block-group.is-layout-row > * {
+  .stack-on-tablet.wp-block-columns>*,
+  .stack-on-tablet.wp-block-group.is-layout-flex>*,
+  .stack-on-tablet.wp-block-group.is-layout-row>* {
     width: 100% !important;
     flex-basis: 100% !important;
   }
@@ -134,15 +136,16 @@
 
 /* .stack-on-desktop: column layout only on desktop */
 @media (min-width: 782px) {
+
   .stack-on-desktop.wp-block-columns,
   .stack-on-desktop.wp-block-group.is-layout-flex,
   .stack-on-desktop.wp-block-group.is-layout-row {
     flex-direction: column !important;
   }
 
-  .stack-on-desktop.wp-block-columns > *,
-  .stack-on-desktop.wp-block-group.is-layout-flex > *,
-  .stack-on-desktop.wp-block-group.is-layout-row > * {
+  .stack-on-desktop.wp-block-columns>*,
+  .stack-on-desktop.wp-block-group.is-layout-flex>*,
+  .stack-on-desktop.wp-block-group.is-layout-row>* {
     width: 100% !important;
     flex-basis: 100% !important;
   }
@@ -158,24 +161,25 @@
   flex-direction: column !important;
 }
 
-.stack-from-mobile.wp-block-columns > *,
-.stack-from-mobile.wp-block-group.is-layout-flex > *,
-.stack-from-mobile.wp-block-group.is-layout-row > * {
+.stack-from-mobile.wp-block-columns>*,
+.stack-from-mobile.wp-block-group.is-layout-flex>*,
+.stack-from-mobile.wp-block-group.is-layout-row>* {
   width: 100% !important;
   flex-basis: 100% !important;
 }
 
 /* .stack-from-tablet: stacked on tablet + desktop; row on mobile */
 @media (min-width: 600px) {
+
   .stack-from-tablet.wp-block-columns,
   .stack-from-tablet.wp-block-group.is-layout-flex,
   .stack-from-tablet.wp-block-group.is-layout-row {
     flex-direction: column !important;
   }
 
-  .stack-from-tablet.wp-block-columns > *,
-  .stack-from-tablet.wp-block-group.is-layout-flex > *,
-  .stack-from-tablet.wp-block-group.is-layout-row > * {
+  .stack-from-tablet.wp-block-columns>*,
+  .stack-from-tablet.wp-block-group.is-layout-flex>*,
+  .stack-from-tablet.wp-block-group.is-layout-row>* {
     width: 100% !important;
     flex-basis: 100% !important;
   }
@@ -186,369 +190,58 @@
    identical. Both are provided for semantic clarity – "from-desktop"
    reads naturally when composing breakpoint-progressive utilities. */
 @media (min-width: 782px) {
+
   .stack-from-desktop.wp-block-columns,
   .stack-from-desktop.wp-block-group.is-layout-flex,
   .stack-from-desktop.wp-block-group.is-layout-row {
     flex-direction: column !important;
   }
 
-  .stack-from-desktop.wp-block-columns > *,
-  .stack-from-desktop.wp-block-group.is-layout-flex > *,
-  .stack-from-desktop.wp-block-group.is-layout-row > * {
+  .stack-from-desktop.wp-block-columns>*,
+  .stack-from-desktop.wp-block-group.is-layout-flex>*,
+  .stack-from-desktop.wp-block-group.is-layout-row>* {
     width: 100% !important;
     flex-basis: 100% !important;
   }
 }
 
+/* --- Flex Wrap (Bootstrap row behavior) --- */
+/* Bootstrap rows always wrap; wp:columns defaults to nowrap */
+/* This enables responsive column wrapping (e.g., 4x col-md-6 = 2 rows of 2) */
+/*
+ * WordPress columns have default gap/margin that causes overflow.
+ * Solution: Use calc() to subtract gutter from each column width.
+ * Formula: calc(percentage - gutter-total)
+ */
 
-/* ==========[ 3. WIDTH UTILITIES ]========== */
-/*                                             */
-/* Control column widths per breakpoint.       */
-/* Gutenberg sets column widths as inline      */
-/* flex-basis styles, so !important is         */
-/* required to override them.                  */
-/*                                             */
-/* Schema: .width-{value}-{breakpoint}         */
-/* Targets: .wp-block-column and general       */
-/*           block elements                    */
-/*                                             */
-/* Values: 10 20 25 30 33 40 50 60 66          */
-/*          70 75 80 90 100                     */
-/* Special: auto                               */
-/* ============================================ */
-
-
-/* --- Mobile widths (max-width: 599px) --- */
-
-@media (max-width: 599px) {
-
-  .width-10-mobile {
-    width: 10% !important;
-    flex-basis: 10% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-20-mobile {
-    width: 20% !important;
-    flex-basis: 20% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-25-mobile {
-    width: 25% !important;
-    flex-basis: 25% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-30-mobile {
-    width: 30% !important;
-    flex-basis: 30% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-33-mobile {
-    width: 33% !important;
-    flex-basis: 33% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-40-mobile {
-    width: 40% !important;
-    flex-basis: 40% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-50-mobile {
-    width: 50% !important;
-    flex-basis: 50% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-60-mobile {
-    width: 60% !important;
-    flex-basis: 60% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-66-mobile {
-    width: 66% !important;
-    flex-basis: 66% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-70-mobile {
-    width: 70% !important;
-    flex-basis: 70% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-75-mobile {
-    width: 75% !important;
-    flex-basis: 75% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-80-mobile {
-    width: 80% !important;
-    flex-basis: 80% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-90-mobile {
-    width: 90% !important;
-    flex-basis: 90% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-100-mobile {
-    width: 100% !important;
-    flex-basis: 100% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-auto-mobile {
-    width: auto !important;
-    flex-basis: auto !important;
-  }
-
+:root {
+  --default-padding: .75rem;
+  --col-1: 8.333333%;
+  --col-2: 16.666667%;
+  --col-3: 25%;
+  --col-4: 33.333333%;
+  --col-5: 41.666667%;
+  --col-6: 50%;
+  --col-7: 58.333333%;
+  --col-8: 66.666667%;
+  --col-9: 75%;
+  --col-10: 83.333333%;
+  --col-11: 91.666667%;
+  --col-12: 100%;
 }
 
-
-/* --- Tablet widths (min-width: 600px and max-width: 781px) --- */
-
-@media (min-width: 600px) and (max-width: 781px) {
-
-  .width-10-tablet {
-    width: 10% !important;
-    flex-basis: 10% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-20-tablet {
-    width: 20% !important;
-    flex-basis: 20% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-25-tablet {
-    width: 25% !important;
-    flex-basis: 25% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-30-tablet {
-    width: 30% !important;
-    flex-basis: 30% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-33-tablet {
-    width: 33% !important;
-    flex-basis: 33% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-40-tablet {
-    width: 40% !important;
-    flex-basis: 40% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-50-tablet {
-    width: 50% !important;
-    flex-basis: 50% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-60-tablet {
-    width: 60% !important;
-    flex-basis: 60% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-66-tablet {
-    width: 66% !important;
-    flex-basis: 66% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-70-tablet {
-    width: 70% !important;
-    flex-basis: 70% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-75-tablet {
-    width: 75% !important;
-    flex-basis: 75% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-80-tablet {
-    width: 80% !important;
-    flex-basis: 80% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-90-tablet {
-    width: 90% !important;
-    flex-basis: 90% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-100-tablet {
-    width: 100% !important;
-    flex-basis: 100% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-auto-tablet {
-    width: auto !important;
-    flex-basis: auto !important;
-  }
-
+.flex-wrap.wp-block-columns {
+  flex-wrap: wrap !important;
+  gap: 0 !important;
 }
 
-
-/* --- Desktop widths (min-width: 782px) --- */
-
-@media (min-width: 782px) {
-
-  .width-10-desktop {
-    width: 10% !important;
-    flex-basis: 10% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-20-desktop {
-    width: 20% !important;
-    flex-basis: 20% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-25-desktop {
-    width: 25% !important;
-    flex-basis: 25% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-30-desktop {
-    width: 30% !important;
-    flex-basis: 30% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-33-desktop {
-    width: 33% !important;
-    flex-basis: 33% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-40-desktop {
-    width: 40% !important;
-    flex-basis: 40% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-50-desktop {
-    width: 50% !important;
-    flex-basis: 50% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-60-desktop {
-    width: 60% !important;
-    flex-basis: 60% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-66-desktop {
-    width: 66% !important;
-    flex-basis: 66% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-70-desktop {
-    width: 70% !important;
-    flex-basis: 70% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-75-desktop {
-    width: 75% !important;
-    flex-basis: 75% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-80-desktop {
-    width: 80% !important;
-    flex-basis: 80% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-90-desktop {
-    width: 90% !important;
-    flex-basis: 90% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-100-desktop {
-    width: 100% !important;
-    flex-basis: 100% !important;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  .width-auto-desktop {
-    width: auto !important;
-    flex-basis: auto !important;
-  }
-
+.flex-wrap.wp-block-columns>.wp-block-column {
+  padding: var(--default-padding);
 }
 
-
-/* ==========[ 4. ORDER (Flex Order) ]========== */
+/* WIDTH UTILITIES REMOVED - Use Bootstrap col-* classes instead */
+/* See section 7: BOOTSTRAP COLUMN CLASSES                       */
+/* ==========[ 3. ORDER (Flex Order) ]========== */
 /*                                               */
 /* Reorder flex children visually per            */
 /* breakpoint without changing DOM order.        */
@@ -667,7 +360,7 @@
 }
 
 
-/* ==========[ 5. SPACING UTILITIES ]========== */
+/* ==========[ 4. SPACING UTILITIES ]========== */
 /*                                              */
 /* Remove gap, padding, or margin per           */
 /* breakpoint on Gutenberg layout blocks.       */
@@ -737,7 +430,7 @@
 }
 
 
-/* ==========[ 6. TEXT ALIGNMENT ]========== */
+/* ==========[ 5. TEXT ALIGNMENT ]========== */
 /*                                           */
 /* Control text alignment per breakpoint.    */
 /* Schema: .text-{align}-{breakpoint}        */
@@ -802,7 +495,7 @@
 }
 
 
-/* ==========[ 7. SPACING UTILITIES ]========== */
+/* ==========[ 6. SPACING UTILITIES ]========== */
 /*                                              */
 /* Responsive margin, padding, and gap          */
 /* utilities using WordPress Spacing Presets.   */
@@ -824,74 +517,267 @@
 @media (max-width: 599px) {
 
   /* Margin alle Seiten – Mobile */
-  .m-0-mobile  { margin: 0 !important; }
-  .m-20-mobile { margin: var(--wp--preset--spacing--20) !important; }
-  .m-30-mobile { margin: var(--wp--preset--spacing--30) !important; }
-  .m-40-mobile { margin: var(--wp--preset--spacing--40) !important; }
-  .m-50-mobile { margin: var(--wp--preset--spacing--50) !important; }
-  .m-60-mobile { margin: var(--wp--preset--spacing--60) !important; }
-  .m-70-mobile { margin: var(--wp--preset--spacing--70) !important; }
-  .m-80-mobile { margin: var(--wp--preset--spacing--80) !important; }
+  .m-0-mobile {
+    margin: 0 !important;
+  }
+
+  .m-20-mobile {
+    margin: var(--wp--preset--spacing--20) !important;
+  }
+
+  .m-30-mobile {
+    margin: var(--wp--preset--spacing--30) !important;
+  }
+
+  .m-40-mobile {
+    margin: var(--wp--preset--spacing--40) !important;
+  }
+
+  .m-50-mobile {
+    margin: var(--wp--preset--spacing--50) !important;
+  }
+
+  .m-60-mobile {
+    margin: var(--wp--preset--spacing--60) !important;
+  }
+
+  .m-70-mobile {
+    margin: var(--wp--preset--spacing--70) !important;
+  }
+
+  .m-80-mobile {
+    margin: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Margin horizontal (links + rechts) – Mobile */
-  .mx-0-mobile  { margin-left: 0 !important; margin-right: 0 !important; }
-  .mx-20-mobile { margin-left: var(--wp--preset--spacing--20) !important; margin-right: var(--wp--preset--spacing--20) !important; }
-  .mx-30-mobile { margin-left: var(--wp--preset--spacing--30) !important; margin-right: var(--wp--preset--spacing--30) !important; }
-  .mx-40-mobile { margin-left: var(--wp--preset--spacing--40) !important; margin-right: var(--wp--preset--spacing--40) !important; }
-  .mx-50-mobile { margin-left: var(--wp--preset--spacing--50) !important; margin-right: var(--wp--preset--spacing--50) !important; }
-  .mx-60-mobile { margin-left: var(--wp--preset--spacing--60) !important; margin-right: var(--wp--preset--spacing--60) !important; }
-  .mx-70-mobile { margin-left: var(--wp--preset--spacing--70) !important; margin-right: var(--wp--preset--spacing--70) !important; }
-  .mx-80-mobile { margin-left: var(--wp--preset--spacing--80) !important; margin-right: var(--wp--preset--spacing--80) !important; }
+  .mx-0-mobile {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .mx-20-mobile {
+    margin-left: var(--wp--preset--spacing--20) !important;
+    margin-right: var(--wp--preset--spacing--20) !important;
+  }
+
+  .mx-30-mobile {
+    margin-left: var(--wp--preset--spacing--30) !important;
+    margin-right: var(--wp--preset--spacing--30) !important;
+  }
+
+  .mx-40-mobile {
+    margin-left: var(--wp--preset--spacing--40) !important;
+    margin-right: var(--wp--preset--spacing--40) !important;
+  }
+
+  .mx-50-mobile {
+    margin-left: var(--wp--preset--spacing--50) !important;
+    margin-right: var(--wp--preset--spacing--50) !important;
+  }
+
+  .mx-60-mobile {
+    margin-left: var(--wp--preset--spacing--60) !important;
+    margin-right: var(--wp--preset--spacing--60) !important;
+  }
+
+  .mx-70-mobile {
+    margin-left: var(--wp--preset--spacing--70) !important;
+    margin-right: var(--wp--preset--spacing--70) !important;
+  }
+
+  .mx-80-mobile {
+    margin-left: var(--wp--preset--spacing--80) !important;
+    margin-right: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Margin vertikal (oben + unten) – Mobile */
-  .my-0-mobile  { margin-top: 0 !important; margin-bottom: 0 !important; }
-  .my-20-mobile { margin-top: var(--wp--preset--spacing--20) !important; margin-bottom: var(--wp--preset--spacing--20) !important; }
-  .my-30-mobile { margin-top: var(--wp--preset--spacing--30) !important; margin-bottom: var(--wp--preset--spacing--30) !important; }
-  .my-40-mobile { margin-top: var(--wp--preset--spacing--40) !important; margin-bottom: var(--wp--preset--spacing--40) !important; }
-  .my-50-mobile { margin-top: var(--wp--preset--spacing--50) !important; margin-bottom: var(--wp--preset--spacing--50) !important; }
-  .my-60-mobile { margin-top: var(--wp--preset--spacing--60) !important; margin-bottom: var(--wp--preset--spacing--60) !important; }
-  .my-70-mobile { margin-top: var(--wp--preset--spacing--70) !important; margin-bottom: var(--wp--preset--spacing--70) !important; }
-  .my-80-mobile { margin-top: var(--wp--preset--spacing--80) !important; margin-bottom: var(--wp--preset--spacing--80) !important; }
+  .my-0-mobile {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .my-20-mobile {
+    margin-top: var(--wp--preset--spacing--20) !important;
+    margin-bottom: var(--wp--preset--spacing--20) !important;
+  }
+
+  .my-30-mobile {
+    margin-top: var(--wp--preset--spacing--30) !important;
+    margin-bottom: var(--wp--preset--spacing--30) !important;
+  }
+
+  .my-40-mobile {
+    margin-top: var(--wp--preset--spacing--40) !important;
+    margin-bottom: var(--wp--preset--spacing--40) !important;
+  }
+
+  .my-50-mobile {
+    margin-top: var(--wp--preset--spacing--50) !important;
+    margin-bottom: var(--wp--preset--spacing--50) !important;
+  }
+
+  .my-60-mobile {
+    margin-top: var(--wp--preset--spacing--60) !important;
+    margin-bottom: var(--wp--preset--spacing--60) !important;
+  }
+
+  .my-70-mobile {
+    margin-top: var(--wp--preset--spacing--70) !important;
+    margin-bottom: var(--wp--preset--spacing--70) !important;
+  }
+
+  .my-80-mobile {
+    margin-top: var(--wp--preset--spacing--80) !important;
+    margin-bottom: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Padding alle Seiten – Mobile */
-  .p-0-mobile  { padding: 0 !important; }
-  .p-20-mobile { padding: var(--wp--preset--spacing--20) !important; }
-  .p-30-mobile { padding: var(--wp--preset--spacing--30) !important; }
-  .p-40-mobile { padding: var(--wp--preset--spacing--40) !important; }
-  .p-50-mobile { padding: var(--wp--preset--spacing--50) !important; }
-  .p-60-mobile { padding: var(--wp--preset--spacing--60) !important; }
-  .p-70-mobile { padding: var(--wp--preset--spacing--70) !important; }
-  .p-80-mobile { padding: var(--wp--preset--spacing--80) !important; }
+  .p-0-mobile {
+    padding: 0 !important;
+  }
+
+  .p-20-mobile {
+    padding: var(--wp--preset--spacing--20) !important;
+  }
+
+  .p-30-mobile {
+    padding: var(--wp--preset--spacing--30) !important;
+  }
+
+  .p-40-mobile {
+    padding: var(--wp--preset--spacing--40) !important;
+  }
+
+  .p-50-mobile {
+    padding: var(--wp--preset--spacing--50) !important;
+  }
+
+  .p-60-mobile {
+    padding: var(--wp--preset--spacing--60) !important;
+  }
+
+  .p-70-mobile {
+    padding: var(--wp--preset--spacing--70) !important;
+  }
+
+  .p-80-mobile {
+    padding: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Padding horizontal (links + rechts) – Mobile */
-  .px-0-mobile  { padding-left: 0 !important; padding-right: 0 !important; }
-  .px-20-mobile { padding-left: var(--wp--preset--spacing--20) !important; padding-right: var(--wp--preset--spacing--20) !important; }
-  .px-30-mobile { padding-left: var(--wp--preset--spacing--30) !important; padding-right: var(--wp--preset--spacing--30) !important; }
-  .px-40-mobile { padding-left: var(--wp--preset--spacing--40) !important; padding-right: var(--wp--preset--spacing--40) !important; }
-  .px-50-mobile { padding-left: var(--wp--preset--spacing--50) !important; padding-right: var(--wp--preset--spacing--50) !important; }
-  .px-60-mobile { padding-left: var(--wp--preset--spacing--60) !important; padding-right: var(--wp--preset--spacing--60) !important; }
-  .px-70-mobile { padding-left: var(--wp--preset--spacing--70) !important; padding-right: var(--wp--preset--spacing--70) !important; }
-  .px-80-mobile { padding-left: var(--wp--preset--spacing--80) !important; padding-right: var(--wp--preset--spacing--80) !important; }
+  .px-0-mobile {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .px-20-mobile {
+    padding-left: var(--wp--preset--spacing--20) !important;
+    padding-right: var(--wp--preset--spacing--20) !important;
+  }
+
+  .px-30-mobile {
+    padding-left: var(--wp--preset--spacing--30) !important;
+    padding-right: var(--wp--preset--spacing--30) !important;
+  }
+
+  .px-40-mobile {
+    padding-left: var(--wp--preset--spacing--40) !important;
+    padding-right: var(--wp--preset--spacing--40) !important;
+  }
+
+  .px-50-mobile {
+    padding-left: var(--wp--preset--spacing--50) !important;
+    padding-right: var(--wp--preset--spacing--50) !important;
+  }
+
+  .px-60-mobile {
+    padding-left: var(--wp--preset--spacing--60) !important;
+    padding-right: var(--wp--preset--spacing--60) !important;
+  }
+
+  .px-70-mobile {
+    padding-left: var(--wp--preset--spacing--70) !important;
+    padding-right: var(--wp--preset--spacing--70) !important;
+  }
+
+  .px-80-mobile {
+    padding-left: var(--wp--preset--spacing--80) !important;
+    padding-right: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Padding vertikal (oben + unten) – Mobile */
-  .py-0-mobile  { padding-top: 0 !important; padding-bottom: 0 !important; }
-  .py-20-mobile { padding-top: var(--wp--preset--spacing--20) !important; padding-bottom: var(--wp--preset--spacing--20) !important; }
-  .py-30-mobile { padding-top: var(--wp--preset--spacing--30) !important; padding-bottom: var(--wp--preset--spacing--30) !important; }
-  .py-40-mobile { padding-top: var(--wp--preset--spacing--40) !important; padding-bottom: var(--wp--preset--spacing--40) !important; }
-  .py-50-mobile { padding-top: var(--wp--preset--spacing--50) !important; padding-bottom: var(--wp--preset--spacing--50) !important; }
-  .py-60-mobile { padding-top: var(--wp--preset--spacing--60) !important; padding-bottom: var(--wp--preset--spacing--60) !important; }
-  .py-70-mobile { padding-top: var(--wp--preset--spacing--70) !important; padding-bottom: var(--wp--preset--spacing--70) !important; }
-  .py-80-mobile { padding-top: var(--wp--preset--spacing--80) !important; padding-bottom: var(--wp--preset--spacing--80) !important; }
+  .py-0-mobile {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .py-20-mobile {
+    padding-top: var(--wp--preset--spacing--20) !important;
+    padding-bottom: var(--wp--preset--spacing--20) !important;
+  }
+
+  .py-30-mobile {
+    padding-top: var(--wp--preset--spacing--30) !important;
+    padding-bottom: var(--wp--preset--spacing--30) !important;
+  }
+
+  .py-40-mobile {
+    padding-top: var(--wp--preset--spacing--40) !important;
+    padding-bottom: var(--wp--preset--spacing--40) !important;
+  }
+
+  .py-50-mobile {
+    padding-top: var(--wp--preset--spacing--50) !important;
+    padding-bottom: var(--wp--preset--spacing--50) !important;
+  }
+
+  .py-60-mobile {
+    padding-top: var(--wp--preset--spacing--60) !important;
+    padding-bottom: var(--wp--preset--spacing--60) !important;
+  }
+
+  .py-70-mobile {
+    padding-top: var(--wp--preset--spacing--70) !important;
+    padding-bottom: var(--wp--preset--spacing--70) !important;
+  }
+
+  .py-80-mobile {
+    padding-top: var(--wp--preset--spacing--80) !important;
+    padding-bottom: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Gap – Mobile (applies to flex/grid containers) */
-  .gap-0-mobile  { gap: 0 !important; }
-  .gap-20-mobile { gap: var(--wp--preset--spacing--20) !important; }
-  .gap-30-mobile { gap: var(--wp--preset--spacing--30) !important; }
-  .gap-40-mobile { gap: var(--wp--preset--spacing--40) !important; }
-  .gap-50-mobile { gap: var(--wp--preset--spacing--50) !important; }
-  .gap-60-mobile { gap: var(--wp--preset--spacing--60) !important; }
-  .gap-70-mobile { gap: var(--wp--preset--spacing--70) !important; }
-  .gap-80-mobile { gap: var(--wp--preset--spacing--80) !important; }
+  .gap-0-mobile {
+    gap: 0 !important;
+  }
+
+  .gap-20-mobile {
+    gap: var(--wp--preset--spacing--20) !important;
+  }
+
+  .gap-30-mobile {
+    gap: var(--wp--preset--spacing--30) !important;
+  }
+
+  .gap-40-mobile {
+    gap: var(--wp--preset--spacing--40) !important;
+  }
+
+  .gap-50-mobile {
+    gap: var(--wp--preset--spacing--50) !important;
+  }
+
+  .gap-60-mobile {
+    gap: var(--wp--preset--spacing--60) !important;
+  }
+
+  .gap-70-mobile {
+    gap: var(--wp--preset--spacing--70) !important;
+  }
+
+  .gap-80-mobile {
+    gap: var(--wp--preset--spacing--80) !important;
+  }
 
 }
 
@@ -901,74 +787,267 @@
 @media (min-width: 600px) and (max-width: 781px) {
 
   /* Margin alle Seiten – Tablet */
-  .m-0-tablet  { margin: 0 !important; }
-  .m-20-tablet { margin: var(--wp--preset--spacing--20) !important; }
-  .m-30-tablet { margin: var(--wp--preset--spacing--30) !important; }
-  .m-40-tablet { margin: var(--wp--preset--spacing--40) !important; }
-  .m-50-tablet { margin: var(--wp--preset--spacing--50) !important; }
-  .m-60-tablet { margin: var(--wp--preset--spacing--60) !important; }
-  .m-70-tablet { margin: var(--wp--preset--spacing--70) !important; }
-  .m-80-tablet { margin: var(--wp--preset--spacing--80) !important; }
+  .m-0-tablet {
+    margin: 0 !important;
+  }
+
+  .m-20-tablet {
+    margin: var(--wp--preset--spacing--20) !important;
+  }
+
+  .m-30-tablet {
+    margin: var(--wp--preset--spacing--30) !important;
+  }
+
+  .m-40-tablet {
+    margin: var(--wp--preset--spacing--40) !important;
+  }
+
+  .m-50-tablet {
+    margin: var(--wp--preset--spacing--50) !important;
+  }
+
+  .m-60-tablet {
+    margin: var(--wp--preset--spacing--60) !important;
+  }
+
+  .m-70-tablet {
+    margin: var(--wp--preset--spacing--70) !important;
+  }
+
+  .m-80-tablet {
+    margin: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Margin horizontal (links + rechts) – Tablet */
-  .mx-0-tablet  { margin-left: 0 !important; margin-right: 0 !important; }
-  .mx-20-tablet { margin-left: var(--wp--preset--spacing--20) !important; margin-right: var(--wp--preset--spacing--20) !important; }
-  .mx-30-tablet { margin-left: var(--wp--preset--spacing--30) !important; margin-right: var(--wp--preset--spacing--30) !important; }
-  .mx-40-tablet { margin-left: var(--wp--preset--spacing--40) !important; margin-right: var(--wp--preset--spacing--40) !important; }
-  .mx-50-tablet { margin-left: var(--wp--preset--spacing--50) !important; margin-right: var(--wp--preset--spacing--50) !important; }
-  .mx-60-tablet { margin-left: var(--wp--preset--spacing--60) !important; margin-right: var(--wp--preset--spacing--60) !important; }
-  .mx-70-tablet { margin-left: var(--wp--preset--spacing--70) !important; margin-right: var(--wp--preset--spacing--70) !important; }
-  .mx-80-tablet { margin-left: var(--wp--preset--spacing--80) !important; margin-right: var(--wp--preset--spacing--80) !important; }
+  .mx-0-tablet {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .mx-20-tablet {
+    margin-left: var(--wp--preset--spacing--20) !important;
+    margin-right: var(--wp--preset--spacing--20) !important;
+  }
+
+  .mx-30-tablet {
+    margin-left: var(--wp--preset--spacing--30) !important;
+    margin-right: var(--wp--preset--spacing--30) !important;
+  }
+
+  .mx-40-tablet {
+    margin-left: var(--wp--preset--spacing--40) !important;
+    margin-right: var(--wp--preset--spacing--40) !important;
+  }
+
+  .mx-50-tablet {
+    margin-left: var(--wp--preset--spacing--50) !important;
+    margin-right: var(--wp--preset--spacing--50) !important;
+  }
+
+  .mx-60-tablet {
+    margin-left: var(--wp--preset--spacing--60) !important;
+    margin-right: var(--wp--preset--spacing--60) !important;
+  }
+
+  .mx-70-tablet {
+    margin-left: var(--wp--preset--spacing--70) !important;
+    margin-right: var(--wp--preset--spacing--70) !important;
+  }
+
+  .mx-80-tablet {
+    margin-left: var(--wp--preset--spacing--80) !important;
+    margin-right: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Margin vertikal (oben + unten) – Tablet */
-  .my-0-tablet  { margin-top: 0 !important; margin-bottom: 0 !important; }
-  .my-20-tablet { margin-top: var(--wp--preset--spacing--20) !important; margin-bottom: var(--wp--preset--spacing--20) !important; }
-  .my-30-tablet { margin-top: var(--wp--preset--spacing--30) !important; margin-bottom: var(--wp--preset--spacing--30) !important; }
-  .my-40-tablet { margin-top: var(--wp--preset--spacing--40) !important; margin-bottom: var(--wp--preset--spacing--40) !important; }
-  .my-50-tablet { margin-top: var(--wp--preset--spacing--50) !important; margin-bottom: var(--wp--preset--spacing--50) !important; }
-  .my-60-tablet { margin-top: var(--wp--preset--spacing--60) !important; margin-bottom: var(--wp--preset--spacing--60) !important; }
-  .my-70-tablet { margin-top: var(--wp--preset--spacing--70) !important; margin-bottom: var(--wp--preset--spacing--70) !important; }
-  .my-80-tablet { margin-top: var(--wp--preset--spacing--80) !important; margin-bottom: var(--wp--preset--spacing--80) !important; }
+  .my-0-tablet {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .my-20-tablet {
+    margin-top: var(--wp--preset--spacing--20) !important;
+    margin-bottom: var(--wp--preset--spacing--20) !important;
+  }
+
+  .my-30-tablet {
+    margin-top: var(--wp--preset--spacing--30) !important;
+    margin-bottom: var(--wp--preset--spacing--30) !important;
+  }
+
+  .my-40-tablet {
+    margin-top: var(--wp--preset--spacing--40) !important;
+    margin-bottom: var(--wp--preset--spacing--40) !important;
+  }
+
+  .my-50-tablet {
+    margin-top: var(--wp--preset--spacing--50) !important;
+    margin-bottom: var(--wp--preset--spacing--50) !important;
+  }
+
+  .my-60-tablet {
+    margin-top: var(--wp--preset--spacing--60) !important;
+    margin-bottom: var(--wp--preset--spacing--60) !important;
+  }
+
+  .my-70-tablet {
+    margin-top: var(--wp--preset--spacing--70) !important;
+    margin-bottom: var(--wp--preset--spacing--70) !important;
+  }
+
+  .my-80-tablet {
+    margin-top: var(--wp--preset--spacing--80) !important;
+    margin-bottom: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Padding alle Seiten – Tablet */
-  .p-0-tablet  { padding: 0 !important; }
-  .p-20-tablet { padding: var(--wp--preset--spacing--20) !important; }
-  .p-30-tablet { padding: var(--wp--preset--spacing--30) !important; }
-  .p-40-tablet { padding: var(--wp--preset--spacing--40) !important; }
-  .p-50-tablet { padding: var(--wp--preset--spacing--50) !important; }
-  .p-60-tablet { padding: var(--wp--preset--spacing--60) !important; }
-  .p-70-tablet { padding: var(--wp--preset--spacing--70) !important; }
-  .p-80-tablet { padding: var(--wp--preset--spacing--80) !important; }
+  .p-0-tablet {
+    padding: 0 !important;
+  }
+
+  .p-20-tablet {
+    padding: var(--wp--preset--spacing--20) !important;
+  }
+
+  .p-30-tablet {
+    padding: var(--wp--preset--spacing--30) !important;
+  }
+
+  .p-40-tablet {
+    padding: var(--wp--preset--spacing--40) !important;
+  }
+
+  .p-50-tablet {
+    padding: var(--wp--preset--spacing--50) !important;
+  }
+
+  .p-60-tablet {
+    padding: var(--wp--preset--spacing--60) !important;
+  }
+
+  .p-70-tablet {
+    padding: var(--wp--preset--spacing--70) !important;
+  }
+
+  .p-80-tablet {
+    padding: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Padding horizontal (links + rechts) – Tablet */
-  .px-0-tablet  { padding-left: 0 !important; padding-right: 0 !important; }
-  .px-20-tablet { padding-left: var(--wp--preset--spacing--20) !important; padding-right: var(--wp--preset--spacing--20) !important; }
-  .px-30-tablet { padding-left: var(--wp--preset--spacing--30) !important; padding-right: var(--wp--preset--spacing--30) !important; }
-  .px-40-tablet { padding-left: var(--wp--preset--spacing--40) !important; padding-right: var(--wp--preset--spacing--40) !important; }
-  .px-50-tablet { padding-left: var(--wp--preset--spacing--50) !important; padding-right: var(--wp--preset--spacing--50) !important; }
-  .px-60-tablet { padding-left: var(--wp--preset--spacing--60) !important; padding-right: var(--wp--preset--spacing--60) !important; }
-  .px-70-tablet { padding-left: var(--wp--preset--spacing--70) !important; padding-right: var(--wp--preset--spacing--70) !important; }
-  .px-80-tablet { padding-left: var(--wp--preset--spacing--80) !important; padding-right: var(--wp--preset--spacing--80) !important; }
+  .px-0-tablet {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .px-20-tablet {
+    padding-left: var(--wp--preset--spacing--20) !important;
+    padding-right: var(--wp--preset--spacing--20) !important;
+  }
+
+  .px-30-tablet {
+    padding-left: var(--wp--preset--spacing--30) !important;
+    padding-right: var(--wp--preset--spacing--30) !important;
+  }
+
+  .px-40-tablet {
+    padding-left: var(--wp--preset--spacing--40) !important;
+    padding-right: var(--wp--preset--spacing--40) !important;
+  }
+
+  .px-50-tablet {
+    padding-left: var(--wp--preset--spacing--50) !important;
+    padding-right: var(--wp--preset--spacing--50) !important;
+  }
+
+  .px-60-tablet {
+    padding-left: var(--wp--preset--spacing--60) !important;
+    padding-right: var(--wp--preset--spacing--60) !important;
+  }
+
+  .px-70-tablet {
+    padding-left: var(--wp--preset--spacing--70) !important;
+    padding-right: var(--wp--preset--spacing--70) !important;
+  }
+
+  .px-80-tablet {
+    padding-left: var(--wp--preset--spacing--80) !important;
+    padding-right: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Padding vertikal (oben + unten) – Tablet */
-  .py-0-tablet  { padding-top: 0 !important; padding-bottom: 0 !important; }
-  .py-20-tablet { padding-top: var(--wp--preset--spacing--20) !important; padding-bottom: var(--wp--preset--spacing--20) !important; }
-  .py-30-tablet { padding-top: var(--wp--preset--spacing--30) !important; padding-bottom: var(--wp--preset--spacing--30) !important; }
-  .py-40-tablet { padding-top: var(--wp--preset--spacing--40) !important; padding-bottom: var(--wp--preset--spacing--40) !important; }
-  .py-50-tablet { padding-top: var(--wp--preset--spacing--50) !important; padding-bottom: var(--wp--preset--spacing--50) !important; }
-  .py-60-tablet { padding-top: var(--wp--preset--spacing--60) !important; padding-bottom: var(--wp--preset--spacing--60) !important; }
-  .py-70-tablet { padding-top: var(--wp--preset--spacing--70) !important; padding-bottom: var(--wp--preset--spacing--70) !important; }
-  .py-80-tablet { padding-top: var(--wp--preset--spacing--80) !important; padding-bottom: var(--wp--preset--spacing--80) !important; }
+  .py-0-tablet {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .py-20-tablet {
+    padding-top: var(--wp--preset--spacing--20) !important;
+    padding-bottom: var(--wp--preset--spacing--20) !important;
+  }
+
+  .py-30-tablet {
+    padding-top: var(--wp--preset--spacing--30) !important;
+    padding-bottom: var(--wp--preset--spacing--30) !important;
+  }
+
+  .py-40-tablet {
+    padding-top: var(--wp--preset--spacing--40) !important;
+    padding-bottom: var(--wp--preset--spacing--40) !important;
+  }
+
+  .py-50-tablet {
+    padding-top: var(--wp--preset--spacing--50) !important;
+    padding-bottom: var(--wp--preset--spacing--50) !important;
+  }
+
+  .py-60-tablet {
+    padding-top: var(--wp--preset--spacing--60) !important;
+    padding-bottom: var(--wp--preset--spacing--60) !important;
+  }
+
+  .py-70-tablet {
+    padding-top: var(--wp--preset--spacing--70) !important;
+    padding-bottom: var(--wp--preset--spacing--70) !important;
+  }
+
+  .py-80-tablet {
+    padding-top: var(--wp--preset--spacing--80) !important;
+    padding-bottom: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Gap – Tablet */
-  .gap-0-tablet  { gap: 0 !important; }
-  .gap-20-tablet { gap: var(--wp--preset--spacing--20) !important; }
-  .gap-30-tablet { gap: var(--wp--preset--spacing--30) !important; }
-  .gap-40-tablet { gap: var(--wp--preset--spacing--40) !important; }
-  .gap-50-tablet { gap: var(--wp--preset--spacing--50) !important; }
-  .gap-60-tablet { gap: var(--wp--preset--spacing--60) !important; }
-  .gap-70-tablet { gap: var(--wp--preset--spacing--70) !important; }
-  .gap-80-tablet { gap: var(--wp--preset--spacing--80) !important; }
+  .gap-0-tablet {
+    gap: 0 !important;
+  }
+
+  .gap-20-tablet {
+    gap: var(--wp--preset--spacing--20) !important;
+  }
+
+  .gap-30-tablet {
+    gap: var(--wp--preset--spacing--30) !important;
+  }
+
+  .gap-40-tablet {
+    gap: var(--wp--preset--spacing--40) !important;
+  }
+
+  .gap-50-tablet {
+    gap: var(--wp--preset--spacing--50) !important;
+  }
+
+  .gap-60-tablet {
+    gap: var(--wp--preset--spacing--60) !important;
+  }
+
+  .gap-70-tablet {
+    gap: var(--wp--preset--spacing--70) !important;
+  }
+
+  .gap-80-tablet {
+    gap: var(--wp--preset--spacing--80) !important;
+  }
 
 }
 
@@ -978,73 +1057,673 @@
 @media (min-width: 782px) {
 
   /* Margin alle Seiten – Desktop */
-  .m-0-desktop  { margin: 0 !important; }
-  .m-20-desktop { margin: var(--wp--preset--spacing--20) !important; }
-  .m-30-desktop { margin: var(--wp--preset--spacing--30) !important; }
-  .m-40-desktop { margin: var(--wp--preset--spacing--40) !important; }
-  .m-50-desktop { margin: var(--wp--preset--spacing--50) !important; }
-  .m-60-desktop { margin: var(--wp--preset--spacing--60) !important; }
-  .m-70-desktop { margin: var(--wp--preset--spacing--70) !important; }
-  .m-80-desktop { margin: var(--wp--preset--spacing--80) !important; }
+  .m-0-desktop {
+    margin: 0 !important;
+  }
+
+  .m-20-desktop {
+    margin: var(--wp--preset--spacing--20) !important;
+  }
+
+  .m-30-desktop {
+    margin: var(--wp--preset--spacing--30) !important;
+  }
+
+  .m-40-desktop {
+    margin: var(--wp--preset--spacing--40) !important;
+  }
+
+  .m-50-desktop {
+    margin: var(--wp--preset--spacing--50) !important;
+  }
+
+  .m-60-desktop {
+    margin: var(--wp--preset--spacing--60) !important;
+  }
+
+  .m-70-desktop {
+    margin: var(--wp--preset--spacing--70) !important;
+  }
+
+  .m-80-desktop {
+    margin: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Margin horizontal (links + rechts) – Desktop */
-  .mx-0-desktop  { margin-left: 0 !important; margin-right: 0 !important; }
-  .mx-20-desktop { margin-left: var(--wp--preset--spacing--20) !important; margin-right: var(--wp--preset--spacing--20) !important; }
-  .mx-30-desktop { margin-left: var(--wp--preset--spacing--30) !important; margin-right: var(--wp--preset--spacing--30) !important; }
-  .mx-40-desktop { margin-left: var(--wp--preset--spacing--40) !important; margin-right: var(--wp--preset--spacing--40) !important; }
-  .mx-50-desktop { margin-left: var(--wp--preset--spacing--50) !important; margin-right: var(--wp--preset--spacing--50) !important; }
-  .mx-60-desktop { margin-left: var(--wp--preset--spacing--60) !important; margin-right: var(--wp--preset--spacing--60) !important; }
-  .mx-70-desktop { margin-left: var(--wp--preset--spacing--70) !important; margin-right: var(--wp--preset--spacing--70) !important; }
-  .mx-80-desktop { margin-left: var(--wp--preset--spacing--80) !important; margin-right: var(--wp--preset--spacing--80) !important; }
+  .mx-0-desktop {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .mx-20-desktop {
+    margin-left: var(--wp--preset--spacing--20) !important;
+    margin-right: var(--wp--preset--spacing--20) !important;
+  }
+
+  .mx-30-desktop {
+    margin-left: var(--wp--preset--spacing--30) !important;
+    margin-right: var(--wp--preset--spacing--30) !important;
+  }
+
+  .mx-40-desktop {
+    margin-left: var(--wp--preset--spacing--40) !important;
+    margin-right: var(--wp--preset--spacing--40) !important;
+  }
+
+  .mx-50-desktop {
+    margin-left: var(--wp--preset--spacing--50) !important;
+    margin-right: var(--wp--preset--spacing--50) !important;
+  }
+
+  .mx-60-desktop {
+    margin-left: var(--wp--preset--spacing--60) !important;
+    margin-right: var(--wp--preset--spacing--60) !important;
+  }
+
+  .mx-70-desktop {
+    margin-left: var(--wp--preset--spacing--70) !important;
+    margin-right: var(--wp--preset--spacing--70) !important;
+  }
+
+  .mx-80-desktop {
+    margin-left: var(--wp--preset--spacing--80) !important;
+    margin-right: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Margin vertikal (oben + unten) – Desktop */
-  .my-0-desktop  { margin-top: 0 !important; margin-bottom: 0 !important; }
-  .my-20-desktop { margin-top: var(--wp--preset--spacing--20) !important; margin-bottom: var(--wp--preset--spacing--20) !important; }
-  .my-30-desktop { margin-top: var(--wp--preset--spacing--30) !important; margin-bottom: var(--wp--preset--spacing--30) !important; }
-  .my-40-desktop { margin-top: var(--wp--preset--spacing--40) !important; margin-bottom: var(--wp--preset--spacing--40) !important; }
-  .my-50-desktop { margin-top: var(--wp--preset--spacing--50) !important; margin-bottom: var(--wp--preset--spacing--50) !important; }
-  .my-60-desktop { margin-top: var(--wp--preset--spacing--60) !important; margin-bottom: var(--wp--preset--spacing--60) !important; }
-  .my-70-desktop { margin-top: var(--wp--preset--spacing--70) !important; margin-bottom: var(--wp--preset--spacing--70) !important; }
-  .my-80-desktop { margin-top: var(--wp--preset--spacing--80) !important; margin-bottom: var(--wp--preset--spacing--80) !important; }
+  .my-0-desktop {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .my-20-desktop {
+    margin-top: var(--wp--preset--spacing--20) !important;
+    margin-bottom: var(--wp--preset--spacing--20) !important;
+  }
+
+  .my-30-desktop {
+    margin-top: var(--wp--preset--spacing--30) !important;
+    margin-bottom: var(--wp--preset--spacing--30) !important;
+  }
+
+  .my-40-desktop {
+    margin-top: var(--wp--preset--spacing--40) !important;
+    margin-bottom: var(--wp--preset--spacing--40) !important;
+  }
+
+  .my-50-desktop {
+    margin-top: var(--wp--preset--spacing--50) !important;
+    margin-bottom: var(--wp--preset--spacing--50) !important;
+  }
+
+  .my-60-desktop {
+    margin-top: var(--wp--preset--spacing--60) !important;
+    margin-bottom: var(--wp--preset--spacing--60) !important;
+  }
+
+  .my-70-desktop {
+    margin-top: var(--wp--preset--spacing--70) !important;
+    margin-bottom: var(--wp--preset--spacing--70) !important;
+  }
+
+  .my-80-desktop {
+    margin-top: var(--wp--preset--spacing--80) !important;
+    margin-bottom: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Padding alle Seiten – Desktop */
-  .p-0-desktop  { padding: 0 !important; }
-  .p-20-desktop { padding: var(--wp--preset--spacing--20) !important; }
-  .p-30-desktop { padding: var(--wp--preset--spacing--30) !important; }
-  .p-40-desktop { padding: var(--wp--preset--spacing--40) !important; }
-  .p-50-desktop { padding: var(--wp--preset--spacing--50) !important; }
-  .p-60-desktop { padding: var(--wp--preset--spacing--60) !important; }
-  .p-70-desktop { padding: var(--wp--preset--spacing--70) !important; }
-  .p-80-desktop { padding: var(--wp--preset--spacing--80) !important; }
+  .p-0-desktop {
+    padding: 0 !important;
+  }
+
+  .p-20-desktop {
+    padding: var(--wp--preset--spacing--20) !important;
+  }
+
+  .p-30-desktop {
+    padding: var(--wp--preset--spacing--30) !important;
+  }
+
+  .p-40-desktop {
+    padding: var(--wp--preset--spacing--40) !important;
+  }
+
+  .p-50-desktop {
+    padding: var(--wp--preset--spacing--50) !important;
+  }
+
+  .p-60-desktop {
+    padding: var(--wp--preset--spacing--60) !important;
+  }
+
+  .p-70-desktop {
+    padding: var(--wp--preset--spacing--70) !important;
+  }
+
+  .p-80-desktop {
+    padding: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Padding horizontal (links + rechts) – Desktop */
-  .px-0-desktop  { padding-left: 0 !important; padding-right: 0 !important; }
-  .px-20-desktop { padding-left: var(--wp--preset--spacing--20) !important; padding-right: var(--wp--preset--spacing--20) !important; }
-  .px-30-desktop { padding-left: var(--wp--preset--spacing--30) !important; padding-right: var(--wp--preset--spacing--30) !important; }
-  .px-40-desktop { padding-left: var(--wp--preset--spacing--40) !important; padding-right: var(--wp--preset--spacing--40) !important; }
-  .px-50-desktop { padding-left: var(--wp--preset--spacing--50) !important; padding-right: var(--wp--preset--spacing--50) !important; }
-  .px-60-desktop { padding-left: var(--wp--preset--spacing--60) !important; padding-right: var(--wp--preset--spacing--60) !important; }
-  .px-70-desktop { padding-left: var(--wp--preset--spacing--70) !important; padding-right: var(--wp--preset--spacing--70) !important; }
-  .px-80-desktop { padding-left: var(--wp--preset--spacing--80) !important; padding-right: var(--wp--preset--spacing--80) !important; }
+  .px-0-desktop {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .px-20-desktop {
+    padding-left: var(--wp--preset--spacing--20) !important;
+    padding-right: var(--wp--preset--spacing--20) !important;
+  }
+
+  .px-30-desktop {
+    padding-left: var(--wp--preset--spacing--30) !important;
+    padding-right: var(--wp--preset--spacing--30) !important;
+  }
+
+  .px-40-desktop {
+    padding-left: var(--wp--preset--spacing--40) !important;
+    padding-right: var(--wp--preset--spacing--40) !important;
+  }
+
+  .px-50-desktop {
+    padding-left: var(--wp--preset--spacing--50) !important;
+    padding-right: var(--wp--preset--spacing--50) !important;
+  }
+
+  .px-60-desktop {
+    padding-left: var(--wp--preset--spacing--60) !important;
+    padding-right: var(--wp--preset--spacing--60) !important;
+  }
+
+  .px-70-desktop {
+    padding-left: var(--wp--preset--spacing--70) !important;
+    padding-right: var(--wp--preset--spacing--70) !important;
+  }
+
+  .px-80-desktop {
+    padding-left: var(--wp--preset--spacing--80) !important;
+    padding-right: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Padding vertikal (oben + unten) – Desktop */
-  .py-0-desktop  { padding-top: 0 !important; padding-bottom: 0 !important; }
-  .py-20-desktop { padding-top: var(--wp--preset--spacing--20) !important; padding-bottom: var(--wp--preset--spacing--20) !important; }
-  .py-30-desktop { padding-top: var(--wp--preset--spacing--30) !important; padding-bottom: var(--wp--preset--spacing--30) !important; }
-  .py-40-desktop { padding-top: var(--wp--preset--spacing--40) !important; padding-bottom: var(--wp--preset--spacing--40) !important; }
-  .py-50-desktop { padding-top: var(--wp--preset--spacing--50) !important; padding-bottom: var(--wp--preset--spacing--50) !important; }
-  .py-60-desktop { padding-top: var(--wp--preset--spacing--60) !important; padding-bottom: var(--wp--preset--spacing--60) !important; }
-  .py-70-desktop { padding-top: var(--wp--preset--spacing--70) !important; padding-bottom: var(--wp--preset--spacing--70) !important; }
-  .py-80-desktop { padding-top: var(--wp--preset--spacing--80) !important; padding-bottom: var(--wp--preset--spacing--80) !important; }
+  .py-0-desktop {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .py-20-desktop {
+    padding-top: var(--wp--preset--spacing--20) !important;
+    padding-bottom: var(--wp--preset--spacing--20) !important;
+  }
+
+  .py-30-desktop {
+    padding-top: var(--wp--preset--spacing--30) !important;
+    padding-bottom: var(--wp--preset--spacing--30) !important;
+  }
+
+  .py-40-desktop {
+    padding-top: var(--wp--preset--spacing--40) !important;
+    padding-bottom: var(--wp--preset--spacing--40) !important;
+  }
+
+  .py-50-desktop {
+    padding-top: var(--wp--preset--spacing--50) !important;
+    padding-bottom: var(--wp--preset--spacing--50) !important;
+  }
+
+  .py-60-desktop {
+    padding-top: var(--wp--preset--spacing--60) !important;
+    padding-bottom: var(--wp--preset--spacing--60) !important;
+  }
+
+  .py-70-desktop {
+    padding-top: var(--wp--preset--spacing--70) !important;
+    padding-bottom: var(--wp--preset--spacing--70) !important;
+  }
+
+  .py-80-desktop {
+    padding-top: var(--wp--preset--spacing--80) !important;
+    padding-bottom: var(--wp--preset--spacing--80) !important;
+  }
 
   /* Gap – Desktop */
-  .gap-0-desktop  { gap: 0 !important; }
-  .gap-20-desktop { gap: var(--wp--preset--spacing--20) !important; }
-  .gap-30-desktop { gap: var(--wp--preset--spacing--30) !important; }
-  .gap-40-desktop { gap: var(--wp--preset--spacing--40) !important; }
-  .gap-50-desktop { gap: var(--wp--preset--spacing--50) !important; }
-  .gap-60-desktop { gap: var(--wp--preset--spacing--60) !important; }
-  .gap-70-desktop { gap: var(--wp--preset--spacing--70) !important; }
-  .gap-80-desktop { gap: var(--wp--preset--spacing--80) !important; }
+  .gap-0-desktop {
+    gap: 0 !important;
+  }
 
+  .gap-20-desktop {
+    gap: var(--wp--preset--spacing--20) !important;
+  }
+
+  .gap-30-desktop {
+    gap: var(--wp--preset--spacing--30) !important;
+  }
+
+  .gap-40-desktop {
+    gap: var(--wp--preset--spacing--40) !important;
+  }
+
+  .gap-50-desktop {
+    gap: var(--wp--preset--spacing--50) !important;
+  }
+
+  .gap-60-desktop {
+    gap: var(--wp--preset--spacing--60) !important;
+  }
+
+  .gap-70-desktop {
+    gap: var(--wp--preset--spacing--70) !important;
+  }
+
+  .gap-80-desktop {
+    gap: var(--wp--preset--spacing--80) !important;
+  }
+
+}
+
+
+/* ==========[ 7. BOOTSTRAP COLUMN CLASSES ]========== */
+/*                                                       */
+/* Bootstrap-style responsive column width classes.      */
+/* Uses Bootstrap breakpoints (not WordPress):           */
+/*   (none): 0px+ (mobile first base)                   */
+/*   sm:     576px+                                     */
+/*   md:     768px+                                     */
+/*   lg:     992px+                                     */
+/*   xl:     1200px+                                    */
+/*   xxl:    1400px+                                    */
+/*                                                       */
+/* "And up" model: col-md-6 means 50% at 768px+         */
+/* Uses !important to override Gutenberg inline styles.  */
+/*                                                       */
+/* Usage: Add class directly to wp-block-column:         */
+/*   <!-- wp:column {"className":"col-12 col-md-6"} -->  */
+/* ===================================================== */
+
+
+/* --- Base (mobile first, applies at all sizes) --- */
+
+.wp-block-column.col-1 {
+  flex: 0 0 var(--col-1) !important;
+  max-width: var(--col-1) !important;
+}
+
+.wp-block-column.col-2 {
+  flex: 0 0 var(--col-2) !important;
+  max-width: var(--col-2) !important;
+}
+
+.wp-block-column.col-3 {
+  flex: 0 0 var(--col-3) !important;
+  max-width: var(--col-3) !important;
+}
+
+.wp-block-column.col-4 {
+  flex: 0 0 var(--col-4) !important;
+  max-width: var(--col-4) !important;
+}
+
+.wp-block-column.col-5 {
+  flex: 0 0 var(--col-5) !important;
+  max-width: var(--col-5) !important;
+}
+
+.wp-block-column.col-6 {
+  flex: 0 0 var(--col-6) !important;
+  max-width: var(--col-6) !important;
+}
+
+.wp-block-column.col-7 {
+  flex: 0 0 var(--col-7) !important;
+  max-width: var(--col-7) !important;
+}
+
+.wp-block-column.col-8 {
+  flex: 0 0 var(--col-8) !important;
+  max-width: var(--col-8) !important;
+}
+
+.wp-block-column.col-9 {
+  flex: 0 0 var(--col-9) !important;
+  max-width: var(--col-9) !important;
+}
+
+.wp-block-column.col-10 {
+  flex: 0 0 var(--col-10) !important;
+  max-width: var(--col-10) !important;
+}
+
+.wp-block-column.col-11 {
+  flex: 0 0 var(--col-11) !important;
+  max-width: var(--col-11) !important;
+}
+
+.wp-block-column.col-12 {
+  flex: 0 0 var(--col-12) !important;
+  max-width: var(--col-12) !important;
+}
+
+
+/* --- sm: 576px and up --- */
+
+@media (min-width: 576px) {
+  .wp-block-column.col-sm-1 {
+    flex: 0 0 var(--col-1) !important;
+    max-width: var(--col-1) !important;
+  }
+
+  .wp-block-column.col-sm-2 {
+    flex: 0 0 var(--col-2) !important;
+    max-width: var(--col-2) !important;
+  }
+
+  .wp-block-column.col-sm-3 {
+    flex: 0 0 var(--col-3) !important;
+    max-width: var(--col-3) !important;
+  }
+
+  .wp-block-column.col-sm-4 {
+    flex: 0 0 var(--col-4) !important;
+    max-width: var(--col-4) !important;
+  }
+
+  .wp-block-column.col-sm-5 {
+    flex: 0 0 var(--col-5) !important;
+    max-width: var(--col-5) !important;
+  }
+
+  .wp-block-column.col-sm-6 {
+    flex: 0 0 var(--col-6) !important;
+    max-width: var(--col-6) !important;
+  }
+
+  .wp-block-column.col-sm-7 {
+    flex: 0 0 var(--col-7) !important;
+    max-width: var(--col-7) !important;
+  }
+
+  .wp-block-column.col-sm-8 {
+    flex: 0 0 var(--col-8) !important;
+    max-width: var(--col-8) !important;
+  }
+
+  .wp-block-column.col-sm-9 {
+    flex: 0 0 var(--col-9) !important;
+    max-width: var(--col-9) !important;
+  }
+
+  .wp-block-column.col-sm-10 {
+    flex: 0 0 var(--col-10) !important;
+    max-width: var(--col-10) !important;
+  }
+
+  .wp-block-column.col-sm-11 {
+    flex: 0 0 var(--col-11) !important;
+    max-width: var(--col-11) !important;
+  }
+
+  .wp-block-column.col-sm-12 {
+    flex: 0 0 var(--col-12) !important;
+    max-width: var(--col-12) !important;
+  }
+}
+
+
+/* --- md: 768px and up --- */
+
+@media (min-width: 768px) {
+  .wp-block-column.col-md-1 {
+    flex: 0 0 var(--col-1) !important;
+    max-width: var(--col-1) !important;
+  }
+
+  .wp-block-column.col-md-2 {
+    flex: 0 0 var(--col-2) !important;
+    max-width: var(--col-2) !important;
+  }
+
+  .wp-block-column.col-md-3 {
+    flex: 0 0 var(--col-3) !important;
+    max-width: var(--col-3) !important;
+  }
+
+  .wp-block-column.col-md-4 {
+    flex: 0 0 var(--col-4) !important;
+    max-width: var(--col-4) !important;
+  }
+
+  .wp-block-column.col-md-5 {
+    flex: 0 0 var(--col-5) !important;
+    max-width: var(--col-5) !important;
+  }
+
+  .wp-block-column.col-md-6 {
+    flex: 0 0 var(--col-6) !important;
+    max-width: var(--col-6) !important;
+  }
+
+  .wp-block-column.col-md-7 {
+    flex: 0 0 var(--col-7) !important;
+    max-width: var(--col-7) !important;
+  }
+
+  .wp-block-column.col-md-8 {
+    flex: 0 0 var(--col-8) !important;
+    max-width: var(--col-8) !important;
+  }
+
+  .wp-block-column.col-md-9 {
+    flex: 0 0 var(--col-9) !important;
+    max-width: var(--col-9) !important;
+  }
+
+  .wp-block-column.col-md-10 {
+    flex: 0 0 var(--col-10) !important;
+    max-width: var(--col-10) !important;
+  }
+
+  .wp-block-column.col-md-11 {
+    flex: 0 0 var(--col-11) !important;
+    max-width: var(--col-11) !important;
+  }
+
+  .wp-block-column.col-md-12 {
+    flex: 0 0 var(--col-12) !important;
+    max-width: var(--col-12) !important;
+  }
+}
+
+
+/* --- lg: 992px and up --- */
+
+@media (min-width: 992px) {
+  .wp-block-column.col-lg-1 {
+    flex: 0 0 var(--col-1) !important;
+    max-width: var(--col-1) !important;
+  }
+
+  .wp-block-column.col-lg-2 {
+    flex: 0 0 var(--col-2) !important;
+    max-width: var(--col-2) !important;
+  }
+
+  .wp-block-column.col-lg-3 {
+    flex: 0 0 var(--col-3) !important;
+    max-width: var(--col-3) !important;
+  }
+
+  .wp-block-column.col-lg-4 {
+    flex: 0 0 var(--col-4) !important;
+    max-width: var(--col-4) !important;
+  }
+
+  .wp-block-column.col-lg-5 {
+    flex: 0 0 var(--col-5) !important;
+    max-width: var(--col-5) !important;
+  }
+
+  .wp-block-column.col-lg-6 {
+    flex: 0 0 var(--col-6) !important;
+    max-width: var(--col-6) !important;
+  }
+
+  .wp-block-column.col-lg-7 {
+    flex: 0 0 var(--col-7) !important;
+    max-width: var(--col-7) !important;
+  }
+
+  .wp-block-column.col-lg-8 {
+    flex: 0 0 var(--col-8) !important;
+    max-width: var(--col-8) !important;
+  }
+
+  .wp-block-column.col-lg-9 {
+    flex: 0 0 var(--col-9) !important;
+    max-width: var(--col-9) !important;
+  }
+
+  .wp-block-column.col-lg-10 {
+    flex: 0 0 var(--col-10) !important;
+    max-width: var(--col-10) !important;
+  }
+
+  .wp-block-column.col-lg-11 {
+    flex: 0 0 var(--col-11) !important;
+    max-width: var(--col-11) !important;
+  }
+
+  .wp-block-column.col-lg-12 {
+    flex: 0 0 var(--col-12) !important;
+    max-width: var(--col-12) !important;
+  }
+}
+
+
+/* --- xl: 1200px and up --- */
+
+@media (min-width: 1200px) {
+  .wp-block-column.col-xl-1 {
+    flex: 0 0 var(--col-1) !important;
+    max-width: var(--col-1) !important;
+  }
+
+  .wp-block-column.col-xl-2 {
+    flex: 0 0 var(--col-2) !important;
+    max-width: var(--col-2) !important;
+  }
+
+  .wp-block-column.col-xl-3 {
+    flex: 0 0 var(--col-3) !important;
+    max-width: var(--col-3) !important;
+  }
+
+  .wp-block-column.col-xl-4 {
+    flex: 0 0 var(--col-4) !important;
+    max-width: var(--col-4) !important;
+  }
+
+  .wp-block-column.col-xl-5 {
+    flex: 0 0 var(--col-5) !important;
+    max-width: var(--col-5) !important;
+  }
+
+  .wp-block-column.col-xl-6 {
+    flex: 0 0 var(--col-6) !important;
+    max-width: var(--col-6) !important;
+  }
+
+  .wp-block-column.col-xl-7 {
+    flex: 0 0 var(--col-7) !important;
+    max-width: var(--col-7) !important;
+  }
+
+  .wp-block-column.col-xl-8 {
+    flex: 0 0 var(--col-8) !important;
+    max-width: var(--col-8) !important;
+  }
+
+  .wp-block-column.col-xl-9 {
+    flex: 0 0 var(--col-9) !important;
+    max-width: var(--col-9) !important;
+  }
+
+  .wp-block-column.col-xl-10 {
+    flex: 0 0 var(--col-10) !important;
+    max-width: var(--col-10) !important;
+  }
+
+  .wp-block-column.col-xl-11 {
+    flex: 0 0 var(--col-11) !important;
+    max-width: var(--col-11) !important;
+  }
+
+  .wp-block-column.col-xl-12 {
+    flex: 0 0 var(--col-12) !important;
+    max-width: var(--col-12) !important;
+  }
+}
+
+
+/* --- xxl: 1400px and up --- */
+
+@media (min-width: 1400px) {
+  .wp-block-column.col-xxl-1 {
+    flex: 0 0 var(--col-1) !important;
+    max-width: var(--col-1) !important;
+  }
+
+  .wp-block-column.col-xxl-2 {
+    flex: 0 0 var(--col-2) !important;
+    max-width: var(--col-2) !important;
+  }
+
+  .wp-block-column.col-xxl-3 {
+    flex: 0 0 var(--col-3) !important;
+    max-width: var(--col-3) !important;
+  }
+
+  .wp-block-column.col-xxl-4 {
+    flex: 0 0 var(--col-4) !important;
+    max-width: var(--col-4) !important;
+  }
+
+  .wp-block-column.col-xxl-5 {
+    flex: 0 0 var(--col-5) !important;
+    max-width: var(--col-5) !important;
+  }
+
+  .wp-block-column.col-xxl-6 {
+    flex: 0 0 var(--col-6) !important;
+    max-width: var(--col-6) !important;
+  }
+
+  .wp-block-column.col-xxl-7 {
+    flex: 0 0 var(--col-7) !important;
+    max-width: var(--col-7) !important;
+  }
+
+  .wp-block-column.col-xxl-8 {
+    flex: 0 0 var(--col-8) !important;
+    max-width: var(--col-8) !important;
+  }
+
+  .wp-block-column.col-xxl-9 {
+    flex: 0 0 var(--col-9) !important;
+    max-width: var(--col-9) !important;
+  }
+
+  .wp-block-column.col-xxl-10 {
+    flex: 0 0 var(--col-10) !important;
+    max-width: var(--col-10) !important;
+  }
+
+  .wp-block-column.col-xxl-11 {
+    flex: 0 0 var(--col-11) !important;
+    max-width: var(--col-11) !important;
+  }
+
+  .wp-block-column.col-xxl-12 {
+    flex: 0 0 var(--col-12) !important;
+    max-width: var(--col-12) !important;
+  }
 }

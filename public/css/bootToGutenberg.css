@@ -392,6 +392,143 @@ body {
     border-top: none;
 }
 
+/* ========== Pattern Modal Styles ========== */
+.pattern-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+}
+
+.pattern-modal-overlay.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pattern-modal {
+    background: #1e1e2e;
+    border-radius: 8px;
+    padding: 1.5rem;
+    max-width: 700px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.pattern-modal h4 {
+    margin: 0 0 1.5rem 0;
+    color: #f8f8f2;
+    font-size: 1.25rem;
+}
+
+.pattern-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.pattern-field label {
+    display: block;
+    color: #ccc;
+    margin-bottom: 0.25rem;
+    font-size: 0.85rem;
+}
+
+.pattern-field input,
+.pattern-field select {
+    width: 100%;
+    padding: 0.5rem;
+    background: #2d2d3d;
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: #f8f8f2;
+    font-size: 0.9rem;
+}
+
+.pattern-field input:focus,
+.pattern-field select:focus {
+    outline: none;
+    border-color: #6c5ce7;
+}
+
+.slug-input {
+    display: flex;
+    align-items: stretch;
+}
+
+.slug-prefix {
+    background: #3d3d4d;
+    color: #888;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #444;
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+    font-size: 0.9rem;
+}
+
+.slug-input input {
+    border-radius: 0 4px 4px 0;
+    flex: 1;
+}
+
+.pattern-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+/* Pattern Preview Step */
+.pattern-preview-container {
+    background: #1a1a2e;
+    border-radius: 6px;
+    overflow: hidden;
+    max-height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.pattern-preview-header {
+    background: #252540;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #333;
+}
+
+.pattern-filename {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #8be9fd;
+}
+
+.pattern-preview-code {
+    margin: 0;
+    padding: 1rem;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: #f8f8f2;
+    background: #1a1a2e;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    flex: 1;
+}
+
+.btn-pattern {
+    background: #9b59b6;
+    color: white;
+    border: none;
+}
+
+.btn-pattern:hover {
+    background: #8e44ad;
+}
+/* ========== END Pattern Modal Styles ========== */
+
 /* CSS Panel Overlay */
 .css-panel-overlay {
     display: none;

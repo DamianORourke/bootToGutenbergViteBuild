@@ -27,6 +27,7 @@ let currentExample = null
 let currentView = 'code'
 let usedCssComponents = new Set()
 let generatedCustomClasses = []
+let generatedPatternContent = ''
 
 // =============================================================================
 // INITIALIZATION
@@ -111,6 +112,23 @@ function bindEventListeners() {
   document.getElementById('copyAllCssBtn')?.addEventListener('click', () => copyCss('all'))
   document.getElementById('copySelectedCssBtn')?.addEventListener('click', () => copyCss('selected'))
 
+  // Pattern modal
+  document.getElementById('patternBtn')?.addEventListener('click', showPatternModal)
+  document.getElementById('patternModalOverlay')?.addEventListener('click', hidePatternModal)
+  document.getElementById('patternCancelBtn')?.addEventListener('click', hidePatternModal)
+  document.getElementById('generatePatternBtn')?.addEventListener('click', generatePatternPreview)
+  document.getElementById('patternBackBtn')?.addEventListener('click', backToPatternForm)
+  document.getElementById('copyPatternBtn')?.addEventListener('click', copyPatternToClipboard)
+
+  // Prevent modal close when clicking inside modal
+  document.querySelector('.pattern-modal')?.addEventListener('click', (e) => e.stopPropagation())
+
+  // Auto-generate slug from title
+  document.getElementById('patternTitle')?.addEventListener('input', (e) => {
+    const slug = toSlug(e.target.value)
+    document.getElementById('patternSlug').value = slug
+  })
+
   // Close dropdown when clicking outside
   document.addEventListener('click', (e) => {
     const dropdown = document.querySelector('.dropdown')
@@ -175,6 +193,7 @@ function convert() {
     document.getElementById('outputHtml').textContent = ''
     document.getElementById('warningsList').innerHTML = '<div class="no-warnings">No warnings - ready to convert</div>'
     document.getElementById('cssBtn').disabled = true
+    document.getElementById('patternBtn').disabled = true
     return
   }
 
@@ -220,6 +239,10 @@ function convert() {
   // Update stats
   updateStats()
 
+  // Enable pattern button
+  const patternBtn = document.getElementById('patternBtn')
+  patternBtn.disabled = !output || !output.trim()
+
   console.log('bootToGutenberg: Conversion complete')
   console.log(`bootToGutenberg: ${usedCssComponents.size} CSS components used`)
 }
@@ -235,6 +258,7 @@ function clearAll() {
   const cssBtn = document.getElementById('cssBtn')
   cssBtn.disabled = true
   cssBtn.textContent = 'CSS Styles'
+  document.getElementById('patternBtn').disabled = true
   document.getElementById('selectedExample').textContent = 'Custom HTML'
   currentExample = null
   usedCssComponents.clear()
@@ -437,6 +461,106 @@ function copyCss(mode) {
     navigator.clipboard.writeText(css)
     showNotification('CSS copied to clipboard!')
   }
+}
+
+// =============================================================================
+// PATTERN MODAL FUNCTIONS
+// =============================================================================
+
+function showPatternModal() {
+  const output = document.getElementById('outputHtml').textContent
+  if (!output || !output.trim()) {
+    alert('Please convert some HTML first')
+    return
+  }
+
+  // Reset form
+  document.getElementById('patternTitle').value = ''
+  document.getElementById('patternSlug').value = ''
+  document.getElementById('patternCategory').value = 'theme-sections'
+  document.getElementById('patternKeywords').value = ''
+  document.getElementById('patternDescription').value = ''
+
+  // Reset to form step
+  document.getElementById('patternFormStep').style.display = 'block'
+  document.getElementById('patternPreviewStep').style.display = 'none'
+
+  document.getElementById('patternModalOverlay').classList.add('show')
+}
+
+function hidePatternModal() {
+  document.getElementById('patternModalOverlay').classList.remove('show')
+  // Reset to form step when closing
+  document.getElementById('patternFormStep').style.display = 'block'
+  document.getElementById('patternPreviewStep').style.display = 'none'
+}
+
+function backToPatternForm() {
+  document.getElementById('patternFormStep').style.display = 'block'
+  document.getElementById('patternPreviewStep').style.display = 'none'
+}
+
+function generatePatternPreview() {
+  const output = document.getElementById('outputHtml').textContent
+  const title = document.getElementById('patternTitle').value.trim()
+  const slug = document.getElementById('patternSlug').value.trim()
+  const category = document.getElementById('patternCategory').value
+  const keywords = document.getElementById('patternKeywords').value.trim()
+  const description = document.getElementById('patternDescription').value.trim()
+
+  if (!title) {
+    alert('Please enter a pattern title')
+    return
+  }
+
+  if (!slug) {
+    alert('Please enter a pattern slug')
+    return
+  }
+
+  // Build PHP pattern file content
+  generatedPatternContent = `<?php
+/**
+ * Title: ${title}
+ * Slug: theme/${slug}
+ * Categories: ${category}
+ * Keywords: ${keywords}
+ * Description: ${description}
+ */
+?>
+${output}
+`
+
+  // Update preview
+  document.getElementById('patternFilename').textContent = 'patterns/' + slug + '.php'
+  document.getElementById('patternPreviewCode').textContent = generatedPatternContent
+
+  // Switch to preview step
+  document.getElementById('patternFormStep').style.display = 'none'
+  document.getElementById('patternPreviewStep').style.display = 'block'
+}
+
+function copyPatternToClipboard() {
+  if (!generatedPatternContent) {
+    alert('No pattern content to copy')
+    return
+  }
+
+  const slug = document.getElementById('patternSlug').value.trim()
+
+  navigator.clipboard.writeText(generatedPatternContent).then(function () {
+    hidePatternModal()
+    showNotification('Pattern copied! Save as patterns/' + slug + '.php')
+  })
+}
+
+function toSlug(str) {
+  return str
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .trim()
 }
 
 // =============================================================================

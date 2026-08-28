@@ -22,7 +22,9 @@ import {
   handleColumn,
   handleGroup,
   handleFlexGroup,
-  handleBorderElement
+  handleBorderElement,
+  handleList,
+  handleListItem
 } from './handlers/layoutHandlers.js'
 
 import {
@@ -77,6 +79,7 @@ import {
   extractAlignItems,
   extractFlexDirection,
   extractColumnWidth,
+  extractResponsiveColumnClasses,
   extractUtilityClasses,
   extractBootstrapClasses,
   extractDataAttributes,
@@ -202,6 +205,9 @@ export class BootstrapToGutenbergConverter {
       'flex-column': { 'flex-direction': 'column' },
       'flex-row-reverse': { 'flex-direction': 'row-reverse' },
       'flex-column-reverse': { 'flex-direction': 'column-reverse' },
+      // Non-standard variants (some frameworks use these)
+      'flex-direction-row': { 'flex-direction': 'row' },
+      'flex-direction-column': { 'flex-direction': 'column' },
 
       // Flex wrap
       'flex-wrap': { 'flex-wrap': 'wrap' },
@@ -215,6 +221,10 @@ export class BootstrapToGutenbergConverter {
       'justify-content-between': { 'justify-content': 'space-between' },
       'justify-content-around': { 'justify-content': 'space-around' },
       'justify-content-evenly': { 'justify-content': 'space-evenly' },
+      // Non-standard variants
+      'justify-content-space-between': { 'justify-content': 'space-between' },
+      'justify-content-space-around': { 'justify-content': 'space-around' },
+      'justify-content-space-evenly': { 'justify-content': 'space-evenly' },
 
       // Align items
       'align-items-start': { 'align-items': 'flex-start' },
@@ -243,6 +253,22 @@ export class BootstrapToGutenbergConverter {
       'gap-3': { 'gap': 'var(--wp--preset--spacing--md)' },
       'gap-4': { 'gap': 'var(--wp--preset--spacing--lg)' },
       'gap-5': { 'gap': 'var(--wp--preset--spacing--xl)' },
+      // Responsive gap (sm/md/lg breakpoint variants - use same values)
+      'gap-sm-1': { 'gap': 'var(--wp--preset--spacing--sm)' },
+      'gap-sm-2': { 'gap': 'var(--wp--preset--spacing--sm)' },
+      'gap-sm-3': { 'gap': 'var(--wp--preset--spacing--md)' },
+      'gap-sm-4': { 'gap': 'var(--wp--preset--spacing--lg)' },
+      'gap-sm-5': { 'gap': 'var(--wp--preset--spacing--xl)' },
+      'gap-md-1': { 'gap': 'var(--wp--preset--spacing--sm)' },
+      'gap-md-2': { 'gap': 'var(--wp--preset--spacing--sm)' },
+      'gap-md-3': { 'gap': 'var(--wp--preset--spacing--md)' },
+      'gap-md-4': { 'gap': 'var(--wp--preset--spacing--lg)' },
+      'gap-md-5': { 'gap': 'var(--wp--preset--spacing--xl)' },
+      'gap-lg-1': { 'gap': 'var(--wp--preset--spacing--sm)' },
+      'gap-lg-2': { 'gap': 'var(--wp--preset--spacing--sm)' },
+      'gap-lg-3': { 'gap': 'var(--wp--preset--spacing--md)' },
+      'gap-lg-4': { 'gap': 'var(--wp--preset--spacing--lg)' },
+      'gap-lg-5': { 'gap': 'var(--wp--preset--spacing--xl)' },
 
       // Border
       'border': { 'border-width': '1px', 'border-style': 'solid' },
@@ -514,6 +540,8 @@ export class BootstrapToGutenbergConverter {
     this.handleGroup = handleGroup.bind(this)
     this.handleFlexGroup = handleFlexGroup.bind(this)
     this.handleBorderElement = handleBorderElement.bind(this)
+    this.handleList = handleList.bind(this)
+    this.handleListItem = handleListItem.bind(this)
 
     // Element handlers
     this.handleHeading = handleHeading.bind(this)
@@ -563,6 +591,7 @@ export class BootstrapToGutenbergConverter {
     this.extractAlignItems = extractAlignItems.bind(this)
     this.extractFlexDirection = extractFlexDirection.bind(this)
     this.extractColumnWidth = extractColumnWidth.bind(this)
+    this.extractResponsiveColumnClasses = extractResponsiveColumnClasses.bind(this)
     this.extractUtilityClasses = extractUtilityClasses.bind(this)
     this.extractBootstrapClasses = extractBootstrapClasses.bind(this)
     this.extractDataAttributes = extractDataAttributes.bind(this)
@@ -748,6 +777,12 @@ export class BootstrapToGutenbergConverter {
     // Dropdown (check before d-flex as dropdowns may have flex classes)
     if (this.hasClass(el, 'dropdown')) {
       return this.handleDropdown(el)
+    }
+
+    // Lists: HTML entity (tag) recognized first, then classList processed
+    // ul/ol with utility classes become wp:list with single custom class
+    if ((tagName === 'ul' || tagName === 'ol') && !this.hasClass(el, 'list-group')) {
+      return this.handleList(el)
     }
 
     // Check for flex display (including responsive variants)
