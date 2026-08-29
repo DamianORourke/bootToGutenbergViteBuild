@@ -369,6 +369,28 @@ body {
     display: none;
 }
 
+/* CodeMirror Editor Styles */
+.CodeMirror {
+    flex: 1;
+    height: auto !important;
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+.CodeMirror-scroll {
+    min-height: 100%;
+}
+
+.CodeMirror.hidden {
+    display: none;
+}
+
+/* Hint autocomplete styling */
+.CodeMirror-hints {
+    z-index: 9999;
+}
+
 /* Examples dropdown - scrollable with categories */
 .dropdown-menu {
     max-height: 400px;
@@ -519,13 +541,19 @@ body {
 }
 
 .btn-pattern {
-    background: #9b59b6;
-    color: white;
-    border: none;
+    background: #8b5cf6 !important;
+    border-color: #8b5cf6 !important;
+    color: white !important;
 }
 
 .btn-pattern:hover {
-    background: #8e44ad;
+    background: #7c3aed !important;
+    border-color: #7c3aed !important;
+}
+
+.btn-pattern:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 /* ========== END Pattern Modal Styles ========== */
 

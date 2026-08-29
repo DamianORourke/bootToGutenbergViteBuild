@@ -5,6 +5,13 @@
  * All modules are imported here and wired together.
  */
 
+// =============================================================================
+// CSS IMPORTS (self-hosted, bundled by Vite)
+// =============================================================================
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap-icons/font/bootstrap-icons.min.css'
+import '../public/css/bootToGutenberg.css'
+
 // Core converter (Phase 3 - COMPLETE)
 import { BootstrapToGutenbergConverter } from './core/Converter.js'
 
@@ -12,11 +19,8 @@ import { BootstrapToGutenbergConverter } from './core/Converter.js'
 import { cssLibrary, getCssForComponents, getComponentsByType } from './data/cssLibrary.js'
 import { examples, exampleNames, exampleCategories, notDevelopedExamples } from './data/examples.js'
 
-// UI modules (Phase 4)
-// import { initConversionUI } from './ui/conversion.js'
-// import { initPreviewUI } from './ui/preview.js'
-// import { initCssPanel } from './ui/cssPanel.js'
-// import { initExamplesUI } from './ui/examplesUI.js'
+// UI modules
+import { Editor } from './ui/editor.js'
 
 // =============================================================================
 // APPLICATION STATE
@@ -28,6 +32,7 @@ let currentView = 'code'
 let usedCssComponents = new Set()
 let generatedCustomClasses = []
 let generatedPatternContent = ''
+let inputEditor = null  // CodeMirror editor instance
 
 // =============================================================================
 // INITIALIZATION
@@ -41,6 +46,16 @@ console.log('bootToGutenberg: Vite module loaded')
 function init() {
   console.log('bootToGutenberg: Initializing...')
 
+  // Initialize CodeMirror editor
+  inputEditor = new Editor('inputHtml', {
+    onChange: (value) => {
+      updateStats()
+      if (currentView === 'preview') {
+        updatePreview()
+      }
+    }
+  }).init()
+
   // Populate examples dropdown from data module
   populateExamplesDropdown()
 
@@ -53,6 +68,7 @@ function init() {
   console.log('bootToGutenberg: Ready')
   console.log(`bootToGutenberg: Loaded ${Object.keys(examples).length} examples`)
   console.log(`bootToGutenberg: Loaded ${Object.keys(cssLibrary).length} CSS components`)
+  console.log('bootToGutenberg: CodeMirror editor initialized with Emmet support')
 }
 
 /**
@@ -137,16 +153,7 @@ function bindEventListeners() {
     }
   })
 
-  // Input change handlers
-  const inputHtml = document.getElementById('inputHtml')
-  if (inputHtml) {
-    inputHtml.addEventListener('input', () => {
-      updateStats()
-      if (currentView === 'preview') {
-        updatePreview()
-      }
-    })
-  }
+  // Note: Input change events are handled by the CodeMirror editor's onChange callback
 }
 
 // =============================================================================
@@ -159,7 +166,11 @@ function bindEventListeners() {
 function loadExample(name) {
   if (examples[name]) {
     currentExample = name
-    document.getElementById('inputHtml').value = examples[name]
+    if (inputEditor) {
+      inputEditor.setValue(examples[name])
+    } else {
+      document.getElementById('inputHtml').value = examples[name]
+    }
     document.getElementById('examplesMenu').classList.remove('show')
     updateStats()
 
@@ -187,7 +198,7 @@ function toggleDropdown() {
 // =============================================================================
 
 function convert() {
-  const inputHtml = document.getElementById('inputHtml')?.value || ''
+  const inputHtml = inputEditor ? inputEditor.getValue() : (document.getElementById('inputHtml')?.value || '')
 
   if (!inputHtml.trim()) {
     document.getElementById('outputHtml').textContent = ''
@@ -252,7 +263,11 @@ function convert() {
 // =============================================================================
 
 function clearAll() {
-  document.getElementById('inputHtml').value = ''
+  if (inputEditor) {
+    inputEditor.setValue('')
+  } else {
+    document.getElementById('inputHtml').value = ''
+  }
   document.getElementById('outputHtml').textContent = ''
   document.getElementById('warningsList').innerHTML = '<div class="no-warnings">No warnings - ready to convert</div>'
   const cssBtn = document.getElementById('cssBtn')
@@ -278,28 +293,38 @@ function setInputView(view) {
   currentView = view
   const codeBtn = document.getElementById('codeViewBtn')
   const previewBtn = document.getElementById('previewViewBtn')
-  const input = document.getElementById('inputHtml')
   const preview = document.getElementById('previewFrame')
 
   if (view === 'code') {
     codeBtn?.classList.add('active')
     previewBtn?.classList.remove('active')
-    if (input) input.style.display = 'block'
+    if (inputEditor) {
+      inputEditor.show()
+    } else {
+      const input = document.getElementById('inputHtml')
+      if (input) input.style.display = 'block'
+    }
     if (preview) preview.style.display = 'none'
   } else {
     codeBtn?.classList.remove('active')
     previewBtn?.classList.add('active')
-    if (input) input.style.display = 'none'
+    if (inputEditor) {
+      inputEditor.hide()
+    } else {
+      const input = document.getElementById('inputHtml')
+      if (input) input.style.display = 'none'
+    }
     if (preview) preview.style.display = 'block'
     updatePreview()
   }
 }
 
 function updatePreview() {
-  const html = document.getElementById('inputHtml')?.value || ''
+  const html = inputEditor ? inputEditor.getValue() : (document.getElementById('inputHtml')?.value || '')
   const preview = document.getElementById('previewFrame')
   if (!preview) return
 
+  // Note: Preview still uses CDN for Bootstrap since it's in an iframe sandbox
   const previewHtml = `
     <!DOCTYPE html>
     <html>
@@ -315,7 +340,7 @@ function updatePreview() {
 }
 
 function updateStats() {
-  const input = document.getElementById('inputHtml')?.value || ''
+  const input = inputEditor ? inputEditor.getValue() : (document.getElementById('inputHtml')?.value || '')
   const output = document.getElementById('outputHtml')?.textContent || ''
   document.getElementById('inputStats').textContent = input.length
   document.getElementById('outputStats').textContent = output.length

@@ -19,5 +19,10 @@
     "blocks"
   ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
+    "codemirror": "^5.65.21"
+  }
 }
